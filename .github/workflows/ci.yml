@@ -125,7 +125,7 @@ jobs:
 
     env:
       clang_tidy_generator: Ninja
-      clang_tidy_compiler_path: clang++
+      clang_tidy_compiler_path: /usr/lib/clang++-15
       #clang_tidy_path: clang-tidy-14
       #;-warnings-as-errors=*;-checks=*;-header-filter=."
       #clang-tidy-14;-*,bugprone*,modernize*,performance*,readability*,-modernize-pass-by-value,-modernize-use-auto,-modernize-use-using,-modernize-use-trailing-return-type,-modernize-use-nodiscard,-modernize-avoid-c-arrays,-readability-magic-numbers,-readability-identifier-length,-readability-named-parameter
@@ -140,6 +140,6 @@ jobs:
       - name: Version
         run: clang++ --version
       - name: Configure
-        run: cmake -B build -S . -G Ninja -D CMAKE_CXX_COMPILER=clang++ -D CMAKE_EXPORT_COMPILE_COMMANDS=ON -D CMAKE_CXX_CLANG_TIDY="clang-tidy-14;-warnings-as-errors=*"
+        run: cmake -B build -S . -G Ninja -D CMAKE_CXX_COMPILER=${{env.clang_tidy_compiler_path}} -D CMAKE_EXPORT_COMPILE_COMMANDS=ON -D CMAKE_CXX_CLANG_TIDY="clang-tidy-14;-warnings-as-errors=*"
       - name: Build
         run: cmake --build build
