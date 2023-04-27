@@ -21,7 +21,7 @@ jobs:
             # instead (faster)
             single_config: true
             install_command: |
-              sudo apt-get install ninja-build
+              sudo apt-get install -y ninja-build
             #setup_homebrew: true
             # install_command: |
             #   brew install gcc@12 ninja binutils
