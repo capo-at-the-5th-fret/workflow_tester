@@ -28,6 +28,7 @@ jobs:
             #   brew link --force binutils
             config_flags: -G Ninja -D CMAKE_CXX_COMPILER=g++-12
             vcpkg_install_dir: /usr/local/share/vcpkg
+            vcpkg_dependencies: doctest
 
           - os: macos-latest
             # Use brew to install the latest version of llvm or gcc. brew will
@@ -38,18 +39,20 @@ jobs:
             #install_command: brew install gcc@12 ninja
             #config_flags: -G Ninja -D CMAKE_CXX_COMPILER=g++-12
             vcpkg_install_dir: /usr/local/share/vcpkg
+            vcpkg_dependencies: doctest
 
           - os: windows-latest
             # Ensure 64-bit version is built
             config_flags: -A x64
             vcpkg_install_dir: C:/vcpkg
+            vcpkg_dependencies: doctest:x64-windows
 
     runs-on: ${{ matrix.os }}
 
     env:
       build_dir: ${{github.workspace}}/build
       #toolchain_file_path: ${{ env.VCPKG_INSTALLATION_ROOT }}/scripts/buildsystems/vcpkg.cmake
-      vcpkg_dependencies: doctest
+      #vcpkg_dependencies: doctest
 
     steps:
     - name: Checkout
@@ -64,8 +67,8 @@ jobs:
       run: ${{matrix.install_command}}
 
     - name: Dependencies
-      if: env.vcpkg_dependencies
-      run: vcpkg install ${{ env.vcpkg_dependencies }}
+      if: matrix.vcpkg_dependencies
+      run: vcpkg install ${{ matrix.vcpkg_dependencies }}
 
     - name: Configure
       #if: matrix.single_config && matrix.config_flags == null
