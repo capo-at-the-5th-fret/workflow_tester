@@ -137,7 +137,7 @@ jobs:
         run: sudo apt-get install -y ninja-build clang-tidy-14
 
       - name: Configure
-        run: cmake -B build -S . -G ${{env.clang_tidy_generator}} -D CMAKE_CXX_COMPILER={{env.clang_tidy_compiler_path}} -D CMAKE_EXPORT_COMPILE_COMMANDS=ON 
-
+        run: cmake -B build -S . -G ${{env.clang_tidy_generator}} -D CMAKE_CXX_COMPILER=${{env.clang_tidy_compiler_path}} -D CMAKE_EXPORT_COMPILE_COMMANDS=ON 
+        # "-D CMAKE_CXX_CLANG_TIDY="${{env.clang_tidy_path}};env.clang_tidy_args}}"
       - name: Build
         run: cmake --build build
