@@ -127,8 +127,8 @@ jobs:
       clang_tidy_generator: Ninja
       clang_tidy_compiler_path: clang++
       #clang_tidy_path: clang-tidy-14
-      #;-warnings-as-errors=*"
-      clang_tidy_args: clang-tidy-14;-header-filter=.;-checks=*
+      #;-warnings-as-errors=*;-checks=*"
+      clang_tidy_args: clang-tidy-14;-header-filter=.
 
     steps:
       - uses: actions/checkout@v3
