@@ -126,7 +126,7 @@ jobs:
     env:
       build_dir: ${{github.workspace}}/build
       clang_tidy_generator: Ninja
-      clang_tidy_compiler_path: clang++ #/usr/bin/clang++-15
+      clang_tidy_compiler_path: /usr/bin/clang++-14
       #clang_tidy_path: clang-tidy-14
       #;-warnings-as-errors=*;-checks=*;-header-filter=."
       #clang-tidy-14;-*,bugprone*,modernize*,performance*,readability*,-modernize-pass-by-value,-modernize-use-auto,-modernize-use-using,-modernize-use-trailing-return-type,-modernize-use-nodiscard,-modernize-avoid-c-arrays,-readability-magic-numbers,-readability-identifier-length,-readability-named-parameter
