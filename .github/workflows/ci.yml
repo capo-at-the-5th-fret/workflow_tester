@@ -45,7 +45,7 @@ jobs:
 
     env:
       build_dir: ${{github.workspace}}/build
-      toolchain_file_path: ${{ env.VCPKG_INSTALLATION_ROOT }}/scripts/buildsystems/vcpkg.cmake
+      #toolchain_file_path: ${{ env.VCPKG_INSTALLATION_ROOT }}/scripts/buildsystems/vcpkg.cmake
       vcpkg_dependencies: doctest
 
     steps:
@@ -67,12 +67,12 @@ jobs:
     - name: Configure
       #if: matrix.single_config && matrix.config_flags == null
       if: matrix.config_flags == null
-      run: cmake -B ${{env.build_dir}} -D CMAKE_BUILD_TYPE=${{matrix.build_type}} -D CMAKE_TOOLCHAIN_FILE=${{env.toolchain_file_path}}
+      run: cmake -B ${{env.build_dir}} -D CMAKE_BUILD_TYPE=${{matrix.build_type}} -D CMAKE_TOOLCHAIN_FILE=${{env.VCPKG_INSTALLATION_ROOT}}/scripts/buildsystems/vcpkg.cmake
 
     - name: Configure (Custom)
       if: matrix.config_flags != null
       #if: matrix.single_config && matrix.config_flags != null
-      run: cmake -B ${{env.build_dir}} -D CMAKE_BUILD_TYPE=${{matrix.build_type}} -D CMAKE_TOOLCHAIN_FILE=${{env.toolchain_file_path}} ${{matrix.config_flags}}
+      run: cmake -B ${{env.build_dir}} -D CMAKE_BUILD_TYPE=${{matrix.build_type}} -D CMAKE_TOOLCHAIN_FILE=${{env.VCPKG_INSTALLATION_ROOT}}/scripts/buildsystems/vcpkg.cmake ${{matrix.config_flags}}
 
     # - name: Multi-Configure
     #   if: ${{ !matrix.single_config && matrix.config_flags == null }}
