@@ -25,7 +25,7 @@ jobs:
             config_flags: -G Ninja -D CMAKE_CXX_COMPILER=g++-12
 
           - os: macos-latest
-            install_command: brew install llvm@15
+            install_command: brew install llvm@15 ninja
             #install_command: brew install gcc@12 ninja
             single_config: true
             #config_flags: -G Ninja -D CMAKE_CXX_COMPILER=g++-12
