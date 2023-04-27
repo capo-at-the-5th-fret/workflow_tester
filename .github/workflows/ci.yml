@@ -31,12 +31,17 @@ jobs:
           - os: macos-latest
             # Use brew to install the latest version of llvm or gcc
             single_config: true
-            install_command: brew install llvm@15 ninja
-            config_flags: -G Ninja -D CMAKE_CXX_COMPILER=$(brew --prefix llvm@15)/bin/clang++
+            install_command: brew install llvm@16 ninja
+            config_flags: -G Ninja -D CMAKE_CXX_COMPILER=$(brew --prefix llvm@16)/bin/clang++
             #install_command: brew install gcc@12 ninja
             #config_flags: -G Ninja -D CMAKE_CXX_COMPILER=g++-12
 
+          - os: windows-latest
+            # Ensure 64-bit version is built
+            config_flags: -A x64
+
     runs-on: ${{ matrix.os }}
+
     env:
       build_dir: ${{github.workspace}}/build
 
@@ -54,19 +59,19 @@ jobs:
 
     - name: Configure
       if: matrix.single_config && matrix.config_flags == null
-      run: cmake -B ${{github.workspace}}/build -D CMAKE_BUILD_TYPE=${{matrix.build_type}}
+      run: cmake -B ${{env.build_dir}} -D CMAKE_BUILD_TYPE=${{matrix.build_type}}
 
     - name: Configure (Custom)
       if: matrix.single_config && matrix.config_flags != null
-      run: cmake -B ${{github.workspace}}/build -D CMAKE_BUILD_TYPE=${{matrix.build_type}} ${{matrix.config_flags}}
+      run: cmake -B ${{env.build_dir}} -D CMAKE_BUILD_TYPE=${{matrix.build_type}} ${{matrix.config_flags}}
 
     - name: Multi-Configure
       if: ${{ !matrix.single_config && matrix.config_flags == null }}
-      run: cmake -B ${{github.workspace}}/build
+      run: cmake -B ${{env.build_dir}}
 
     - name: Multi-Configure (Custom)
       if: ${{ !matrix.single_config && matrix.config_flags != null }}
-      run: cmake -B ${{github.workspace}}/build -D ${{matrix.config_flags}}
+      run: cmake -B ${{env.build_dir}} -D ${{matrix.config_flags}}
 
     - name: Build
       working-directory: ${{env.build_dir}}
