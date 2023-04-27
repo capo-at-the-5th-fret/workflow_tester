@@ -137,10 +137,10 @@ jobs:
 
       - name: Install
         run: sudo apt-get install -y ninja-build clang-tidy-14 #clang-15 clang-tidy-15
-      # - name: Find
-      #   run: |
-      #     dpkg -L clang-15
-      #     dpkg -L clang-tidy-15
+      - name: Find
+        run: |
+          dpkg -L clang-14
+          dpkg -L clang-tidy-14
       - name: Dependencies
         run: vcpkg install doctest
           #cd /usr/local/share/vcpkg
