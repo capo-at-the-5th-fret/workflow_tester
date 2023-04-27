@@ -15,21 +15,21 @@ jobs:
         build_type: [Release]
         include:
           - os: ubuntu-latest
+            single_config: true
             install_command: |
               sudo apt-get install ninja-build
             #setup_homebrew: true
             # install_command: |
             #   brew install gcc@12 ninja binutils
             #   brew link --force binutils
-            single_config: true
             config_flags: -G Ninja -D CMAKE_CXX_COMPILER=g++-12
 
           - os: macos-latest
-            install_command: brew install llvm@16 ninja
+            install_command: brew install llvm@15 ninja
             #install_command: brew install gcc@12 ninja
             single_config: true
             #config_flags: -G Ninja -D CMAKE_CXX_COMPILER=g++-12
-            config_flags: -G Ninja -D CMAKE_CXX_COMPILER=clang++
+            config_flags: -G Ninja -D CMAKE_CXX_COMPILER=$(brew --prefix llvm@15)/bin/clang++
 
     runs-on: ${{ matrix.os }}
 
