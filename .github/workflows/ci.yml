@@ -126,9 +126,9 @@ jobs:
     env:
       clang_tidy_generator: Ninja
       clang_tidy_compiler_path: clang++
-      clang_tidy_path: clang-tidy-14
+      #clang_tidy_path: clang-tidy-14
       #;-warnings-as-errors=*"
-      clang_tidy_args: -header-filter=.;-checks=*
+      clang_tidy_args: clang-tidy-14;-header-filter=.;-checks=*
 
     steps:
       - uses: actions/checkout@v3
@@ -137,6 +137,6 @@ jobs:
         run: sudo apt-get install -y ninja-build clang-tidy-14
 
       - name: Configure
-        run: cmake -B build -S . -G ${{env.clang_tidy_generator}} -D CMAKE_CXX_COMPILER=${{env.clang_tidy_compiler_path}} -D CMAKE_EXPORT_COMPILE_COMMANDS=ON -D CMAKE_CXX_CLANG_TIDY="${{env.clang_tidy_path}};${{env.clang_tidy_args}}"
+        run: cmake -B build -S . -G ${{env.clang_tidy_generator}} -D CMAKE_CXX_COMPILER=${{env.clang_tidy_compiler_path}} -D CMAKE_EXPORT_COMPILE_COMMANDS=ON -D CMAKE_CXX_CLANG_TIDY="${{env.clang_tidy_args}}"
       - name: Build
         run: cmake --build build
