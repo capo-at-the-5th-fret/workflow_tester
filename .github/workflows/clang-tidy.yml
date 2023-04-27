@@ -36,8 +36,10 @@ jobs:
         run: vcpkg install doctest
           #cd /usr/local/share/vcpkg
           #ls
-      # - name: Version
-      #   run: clang++ --version
+      - name: Version
+        run: |
+          clang++ --version
+          clang-tidy --version
 
       # - name: Configure
       #   run: cmake -B build -S . -G Ninja -D CMAKE_CXX_COMPILER=${{env.clang_tidy_compiler_path}} -D CMAKE_EXPORT_COMPILE_COMMANDS=ON -D CMAKE_TOOLCHAIN_FILE=${{env.clang_tidy_toolchain_file_path}} -D CMAKE_CXX_CLANG_TIDY="${{env.clang_tidy_args}}"
