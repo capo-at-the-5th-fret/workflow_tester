@@ -128,7 +128,8 @@ jobs:
       clang_tidy_compiler_path: clang++
       #clang_tidy_path: clang-tidy-14
       #;-warnings-as-errors=*;-checks=*;-header-filter=."
-      clang_tidy_args: clang-tidy-14;-*,bugprone*,modernize*,performance*,readability*,-modernize-pass-by-value,-modernize-use-auto,-modernize-use-using,-modernize-use-trailing-return-type,-modernize-use-nodiscard,-modernize-avoid-c-arrays,-readability-magic-numbers,-readability-identifier-length,-readability-named-parameter
+      #clang-tidy-14;-*,bugprone*,modernize*,performance*,readability*,-modernize-pass-by-value,-modernize-use-auto,-modernize-use-using,-modernize-use-trailing-return-type,-modernize-use-nodiscard,-modernize-avoid-c-arrays,-readability-magic-numbers,-readability-identifier-length,-readability-named-parameter
+      clang_tidy_args: clang-tidy-14;-warnings-as-errors=*
 
     steps:
       - uses: actions/checkout@v3
