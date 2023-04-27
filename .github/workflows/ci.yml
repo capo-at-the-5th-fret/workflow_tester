@@ -135,8 +135,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      # - name: Install
-      #   run: sudo apt-get install -y ninja-build clang-15 clang-tidy-15
+      - name: Install
+        run: sudo apt-get install -y ninja-build clang-tidy-14 #clang-15 clang-tidy-15
       # - name: Find
       #   run: |
       #     dpkg -L clang-15
@@ -147,10 +147,10 @@ jobs:
           #ls
       # - name: Version
       #   run: clang++ --version
-      # - name: Configure
-      #   run: cmake -B build -S . -G Ninja -D CMAKE_CXX_COMPILER=${{env.clang_tidy_compiler_path}} -D CMAKE_EXPORT_COMPILE_COMMANDS=ON #-D CMAKE_CXX_CLANG_TIDY="${{env.clang_tidy_args}}"
-      # - name: Build
-      #   run: cmake --build build
-      # - name: Run clang-tidy
-      #   working-directory: ${{env.build_dir}}
-      #   run: "/usr/lib/llvm-15/bin/run-clang-tidy -config=\"{Checks: '-*,bugprone*,modernize*,performance*,readability*' }\" -header-filter=\"include[\\/]math.*\""
+      - name: Configure
+        run: cmake -B build -S . -G Ninja -D CMAKE_CXX_COMPILER=${{env.clang_tidy_compiler_path}} -D CMAKE_EXPORT_COMPILE_COMMANDS=ON -D CMAKE_TOOLCHAIN_FILE=/usr/local/share/vcpkg/scripts/buildsystems/vcpkg.cmake #-D CMAKE_CXX_CLANG_TIDY="${{env.clang_tidy_args}}"
+      - name: Build
+        run: cmake --build build
+      - name: Run clang-tidy
+        working-directory: ${{env.build_dir}}
+        run: "/usr/lib/llvm-15/bin/run-clang-tidy -config=\"{Checks: '-*,bugprone*,modernize*,performance*,readability*' }\" -header-filter=\"include[\\/]math.*\""
