@@ -67,12 +67,12 @@ jobs:
     - name: Configure
       #if: matrix.single_config && matrix.config_flags == null
       if: matrix.config_flags == null
-      run: cmake -B ${{env.build_dir}} -D CMAKE_BUILD_TYPE=${{matrix.build_type}} -D CMAKE_TOOLCHAIN_FILE=${{env.VCPKG_INSTALLATION_ROOT}}/scripts/buildsystems/vcpkg.cmake
+      run: cmake -B ${{env.build_dir}} -D CMAKE_BUILD_TYPE=${{matrix.build_type}} -D CMAKE_TOOLCHAIN_FILE=$VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake
 
     - name: Configure (Custom)
       if: matrix.config_flags != null
       #if: matrix.single_config && matrix.config_flags != null
-      run: cmake -B ${{env.build_dir}} -D CMAKE_BUILD_TYPE=${{matrix.build_type}} -D CMAKE_TOOLCHAIN_FILE=${{env.VCPKG_INSTALLATION_ROOT}}/scripts/buildsystems/vcpkg.cmake ${{matrix.config_flags}}
+      run: cmake -B ${{env.build_dir}} -D CMAKE_BUILD_TYPE=${{matrix.build_type}} -D CMAKE_TOOLCHAIN_FILE=$VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake ${{matrix.config_flags}}
 
     # - name: Multi-Configure
     #   if: ${{ !matrix.single_config && matrix.config_flags == null }}
