@@ -32,7 +32,8 @@ jobs:
             config_flags: -G Ninja -D CMAKE_CXX_COMPILER=g++-12
 
           - os: macos-latest
-            # Use brew to install the latest version of llvm or gcc
+            # Use brew to install the latest version of llvm or gcc. brew will
+            # ignore the item if it is already installed
             single_config: true
             install_command: brew install llvm@16 ninja
             config_flags: -G Ninja -D CMAKE_CXX_COMPILER=$(brew --prefix llvm@16)/bin/clang++
