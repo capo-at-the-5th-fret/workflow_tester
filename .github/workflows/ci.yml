@@ -2,7 +2,7 @@ name: Continuous Integration
 
 on:
   push:
-    branches: [ "update-workflow" ] #"main", "fix*" ]
+    branches: [ "main", "fix*" ]
   pull_request:
     branches: [ "main", "fix*" ]
 
