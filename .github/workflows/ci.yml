@@ -27,6 +27,7 @@ jobs:
             #   brew install gcc@12 ninja binutils
             #   brew link --force binutils
             config_flags: -G Ninja -D CMAKE_CXX_COMPILER=g++-12
+            vcpkg_install_dir: /usr/local/share/vcpkg
 
           - os: macos-latest
             # Use brew to install the latest version of llvm or gcc. brew will
@@ -36,10 +37,12 @@ jobs:
             config_flags: -G Ninja -D CMAKE_CXX_COMPILER=$(brew --prefix llvm@16)/bin/clang++
             #install_command: brew install gcc@12 ninja
             #config_flags: -G Ninja -D CMAKE_CXX_COMPILER=g++-12
+            vcpkg_install_dir: /usr/local/share/vcpkg
 
           - os: windows-latest
             # Ensure 64-bit version is built
             config_flags: -A x64
+            vcpkg_install_dir: C:/vcpkg
 
     runs-on: ${{ matrix.os }}
 
@@ -67,12 +70,12 @@ jobs:
     - name: Configure
       #if: matrix.single_config && matrix.config_flags == null
       if: matrix.config_flags == null
-      run: cmake -B ${{env.build_dir}} -D CMAKE_BUILD_TYPE=${{matrix.build_type}} -D CMAKE_TOOLCHAIN_FILE=$VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake
+      run: cmake -B ${{env.build_dir}} -D CMAKE_BUILD_TYPE=${{matrix.build_type}} -D CMAKE_TOOLCHAIN_FILE=${{matrix.vcpkg_install_dir}}/scripts/buildsystems/vcpkg.cmake
 
     - name: Configure (Custom)
       if: matrix.config_flags != null
       #if: matrix.single_config && matrix.config_flags != null
-      run: cmake -B ${{env.build_dir}} -D CMAKE_BUILD_TYPE=${{matrix.build_type}} -D CMAKE_TOOLCHAIN_FILE=$VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake ${{matrix.config_flags}}
+      run: cmake -B ${{env.build_dir}} -D CMAKE_BUILD_TYPE=${{matrix.build_type}} -D CMAKE_TOOLCHAIN_FILE=${{matrix.vcpkg_install_dir}}/scripts/buildsystems/vcpkg.cmake ${{matrix.config_flags}}
 
     # - name: Multi-Configure
     #   if: ${{ !matrix.single_config && matrix.config_flags == null }}
