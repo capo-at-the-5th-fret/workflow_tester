@@ -142,7 +142,7 @@ jobs:
           dpkg -L clang-15
           dpkg -L clang-tidy-15
       - name: Dependencies
-        run: ${{ VCPKG_INSTALLATION_ROOT }}/vcpkg install doctest
+        run: ${{ env.VCPKG_INSTALLATION_ROOT }}/vcpkg install doctest
       - name: Version
         run: clang++ --version
       - name: Configure
