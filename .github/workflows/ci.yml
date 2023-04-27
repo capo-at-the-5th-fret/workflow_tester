@@ -142,9 +142,9 @@ jobs:
       #     dpkg -L clang-15
       #     dpkg -L clang-tidy-15
       - name: Dependencies
-        run: |
-          cd /usr/local/share/vcpkg
-          ls
+        run: vcpkg install doctest
+          #cd /usr/local/share/vcpkg
+          #ls
       # - name: Version
       #   run: clang++ --version
       # - name: Configure
