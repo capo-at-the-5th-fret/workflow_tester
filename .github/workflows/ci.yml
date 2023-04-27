@@ -16,7 +16,7 @@ jobs:
         include:
           - os: ubuntu-latest
             install_command: |
-              sudo apt-get install ninja
+              sudo apt-get install ninja-build
             #setup_homebrew: true
             # install_command: |
             #   brew install gcc@12 ninja binutils
