@@ -1,0 +1,165 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches: [ "main", "fix*" ]
+  pull_request:
+    branches: [ "main", "fix*" ]
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        build_type: [Release]
+        include:
+          - os: ubuntu-latest
+            # Uncomment the setup_homebrew and the brew based install_command to
+            # use the latest version of gcc via brew. If the latest is
+            # pre-installed with the runner, use the sudo based install_command
+            # instead (faster)
+            single_config: true
+            install_command: |
+              sudo apt-get install -y ninja-build
+            #setup_homebrew: true
+            # install_command: |
+            #   brew install gcc@12 ninja binutils
+            #   brew link --force binutils
+            config_flags: -G Ninja -D CMAKE_CXX_COMPILER=g++-12
+
+          - os: macos-latest
+            # Use brew to install the latest version of llvm or gcc. brew will
+            # ignore the item if it is already installed
+            single_config: true
+            install_command: brew install llvm@16 ninja
+            config_flags: -G Ninja -D CMAKE_CXX_COMPILER=$(brew --prefix llvm@16)/bin/clang++
+            #install_command: brew install gcc@12 ninja
+            #config_flags: -G Ninja -D CMAKE_CXX_COMPILER=g++-12
+
+          - os: windows-latest
+            # Ensure 64-bit version is built
+            config_flags: -A x64
+
+    runs-on: ${{ matrix.os }}
+
+    env:
+      build_dir: ${{github.workspace}}/build
+      toolchain_file_path: ${{ env.VCPKG_INSTALLATION_ROOT }}/scripts/buildsystems/vcpkg.cmake
+      vcpkg_dependencies: doctest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Homebrew Setup
+      if: ${{ matrix.setup_homebrew }}
+      uses: Homebrew/actions/setup-homebrew@master
+
+    - name: Install
+      if: matrix.install_command
+      run: ${{matrix.install_command}}
+
+    - name: Dependencies
+      if: env.cxx_dependencies
+      run: vcpkg install ${{ env.cxx_dependencies }}
+
+    - name: Configure
+      #if: matrix.single_config && matrix.config_flags == null
+      if: matrix.config_flags == null
+      run: cmake -B ${{env.build_dir}} -D CMAKE_BUILD_TYPE=${{matrix.build_type}} -D CMAKE_TOOLCHAIN_FILE=${{env.toolchain_file_path}}
+
+    - name: Configure (Custom)
+      if: matrix.config_flags != null
+      #if: matrix.single_config && matrix.config_flags != null
+      run: cmake -B ${{env.build_dir}} -D CMAKE_BUILD_TYPE=${{matrix.build_type}} -D CMAKE_TOOLCHAIN_FILE=${{env.toolchain_file_path}} ${{matrix.config_flags}}
+
+    # - name: Multi-Configure
+    #   if: ${{ !matrix.single_config && matrix.config_flags == null }}
+    #   run: cmake -B ${{env.build_dir}}
+
+    # - name: Multi-Configure (Custom)
+    #   if: ${{ !matrix.single_config && matrix.config_flags != null }}
+    #   run: cmake -B ${{env.build_dir}} ${{matrix.config_flags}}
+
+    - name: Build
+      working-directory: ${{env.build_dir}}
+      run: cmake --build . --config ${{matrix.build_type}}
+
+    - name: Test
+      working-directory: ${{env.build_dir}}
+      run: ctest -C ${{matrix.build_type}}
+      env:
+        CTEST_OUTPUT_ON_FAILURE: True
+
+# Taken from doctest github
+  # coverage:
+  #   runs-on: ubuntu-latest
+
+  #   env:
+  #     lcov_include_pattern: "*include/math*"
+
+  #   steps:
+  #     - uses: actions/checkout@v3
+
+  #     - name: Install
+  #       run: sudo apt-get install -y ninja-build lcov
+
+  #     - name: Configure
+  #       run: cmake -B build -S . -G Ninja -D CMAKE_CXX_FLAGS="-fprofile-arcs -ftest-coverage"
+
+  #     - name: Build
+  #       run: cmake --build build
+
+  #     - name: Test
+  #       run: ctest --test-dir build --no-tests=error
+
+  #     - name: LCOV
+  #       run: |
+  #         mkdir coverage
+  #         lcov -c -d build/ -o coverage/lcov.info --include "${{env.lcov_include_pattern}}"
+
+  #     - name: Codecov
+  #       uses: codecov/codecov-action@v3
+  #       with:
+  #         token: ${{ secrets.CODECOV_TOKEN }}
+  #         files: ./coverage/lcov.info
+  #         fail_ci_if_error: true
+
+# Taken from doctest github
+  # clang-tidy:
+  #   if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
+  #   runs-on: ubuntu-latest
+
+  #   env:
+  #     build_dir: ${{github.workspace}}/build
+  #     clang_tidy_toolchain_file_path: /usr/local/share/vcpkg/scripts/buildsystems/vcpkg.cmake
+  #     clang_tidy_generator: Ninja
+  #     clang_tidy_compiler_path: /usr/bin/clang++-14
+  #     clang_tidy_path: /usr/bin/clang-tidy-14
+  #     #;-warnings-as-errors=*;-checks=*;-header-filter=."
+  #     #clang-tidy-14;-*,bugprone*,modernize*,performance*,readability*,-modernize-pass-by-value,-modernize-use-auto,-modernize-use-using,-modernize-use-trailing-return-type,-modernize-use-nodiscard,-modernize-avoid-c-arrays,-readability-magic-numbers,-readability-identifier-length,-readability-named-parameter
+  #     clang_tidy_args: /usr/bin/clang-tidy-14;-warnings-as-errors=*
+
+  #   steps:
+  #     - uses: actions/checkout@v3
+
+  #     - name: Install
+  #       run: sudo apt-get install -y ninja-build clang-tidy-14 #clang-15 clang-tidy-15
+  #     # - name: Find
+  #     #   run: |
+  #     #     dpkg -L clang-14
+  #     #     dpkg -L clang-tidy-14
+  #     - name: Dependencies
+  #       run: vcpkg install doctest
+  #         #cd /usr/local/share/vcpkg
+  #         #ls
+  #     # - name: Version
+  #     #   run: clang++ --version
+  #     - name: Configure
+  #       run: cmake -B build -S . -G Ninja -D CMAKE_CXX_COMPILER=${{env.clang_tidy_compiler_path}} -D CMAKE_EXPORT_COMPILE_COMMANDS=ON -D CMAKE_TOOLCHAIN_FILE=${{env.clang_tidy_toolchain_file_path}} -D CMAKE_CXX_CLANG_TIDY="${{env.clang_tidy_args}}"
+  #     - name: Build
+  #       run: cmake --build build
+  #     - name: Run clang-tidy
+  #       working-directory: ${{env.build_dir}}
+  #       run: "/usr/lib/llvm-14/bin/run-clang-tidy -config=\"{Checks: '-*,bugprone*,modernize*,performance*,readability*' }\" -header-filter=\"include[\\/]math.*\""
