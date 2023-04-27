@@ -64,8 +64,8 @@ jobs:
       run: ${{matrix.install_command}}
 
     - name: Dependencies
-      if: env.cxx_dependencies
-      run: vcpkg install ${{ env.cxx_dependencies }}
+      if: env.vcpkg_dependencies
+      run: vcpkg install ${{ env.vcpkg_dependencies }}
 
     - name: Configure
       #if: matrix.single_config && matrix.config_flags == null
