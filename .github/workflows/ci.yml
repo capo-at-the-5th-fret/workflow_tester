@@ -15,6 +15,10 @@ jobs:
         build_type: [Release]
         include:
           - os: ubuntu-latest
+            # Uncomment the setup_homebrew and the brew based install_command to
+            # use the latest version of gcc via brew. If the latest is
+            # pre-installed with the runner, use the sudo based install_command
+            # instead (faster)
             single_config: true
             install_command: |
               sudo apt-get install ninja-build
@@ -25,15 +29,16 @@ jobs:
             config_flags: -G Ninja -D CMAKE_CXX_COMPILER=g++-12
 
           - os: macos-latest
-            install_command: brew install llvm@16 ninja
-            #install_command: brew install llvm@15 ninja
-            #install_command: brew install gcc@12 ninja
+            # Use brew to install the latest version of llvm or gcc
             single_config: true
-            #config_flags: -G Ninja -D CMAKE_CXX_COMPILER=g++-12
-            #config_flags: -G Ninja -D CMAKE_CXX_COMPILER=$(brew --prefix llvm@15)/bin/clang++
+            install_command: brew install llvm@16 ninja
             config_flags: -G Ninja -D CMAKE_CXX_COMPILER=$(brew --prefix llvm@16)/bin/clang++
+            #install_command: brew install gcc@12 ninja
+            #config_flags: -G Ninja -D CMAKE_CXX_COMPILER=g++-12
 
     runs-on: ${{ matrix.os }}
+    env:
+      build_dir: ${{github.workspace}}/build
 
     steps:
     - name: Checkout
@@ -64,10 +69,11 @@ jobs:
       run: cmake -B ${{github.workspace}}/build -D ${{matrix.config_flags}}
 
     - name: Build
-      run: cmake --build ${{github.workspace}}/build --config ${{matrix.build_type}}
+      working-directory: ${{env.build_dir}}
+      run: cmake --build . --config ${{matrix.build_type}}
 
     - name: Test
-      working-directory: ${{github.workspace}}/build
+      working-directory: ${{env.build_dir}}
       run: ctest -C ${{matrix.build_type}}
       env:
         CTEST_OUTPUT_ON_FAILURE: True
