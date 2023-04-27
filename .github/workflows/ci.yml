@@ -1,0 +1,114 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches: [ "update-workflow" ] #"main", "fix*" ]
+  pull_request:
+    branches: [ "main", "fix*" ]
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        build_type: [Release]
+        include:
+          - os: ubuntu-latest
+            install_command: |
+              brew install gcc@12 ninja binutils
+              brew link --force binutils
+            single_config: true
+            config_flags: -G Ninja -D CMAKE_CXX_COMPILER=g++-12
+
+          - os: macos-latest
+            install_command: brew install gcc@12 ninja
+            single_config: true
+            config_flags: -G Ninja -D CMAKE_CXX_COMPILER=g++-12
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Homebrew Setup
+      if: runner.os == 'Linux'
+      uses: Homebrew/actions/setup-homebrew@master
+
+    - name: Install
+      if: matrix.install_command
+      run: ${{matrix.install_command}}
+
+    - name: Configure
+      if: matrix.single_config && matrix.config_flags == null
+      run: cmake -B ${{github.workspace}}/build -D CMAKE_BUILD_TYPE=${{matrix.build_type}}
+
+    - name: Configure (Custom)
+      if: matrix.single_config && matrix.config_flags != null
+      run: cmake -B ${{github.workspace}}/build -D CMAKE_BUILD_TYPE=${{matrix.build_type}} ${{matrix.config_flags}}
+
+    - name: Multi-Configure
+      if: ${{ !matrix.single_config && matrix.config_flags == null }}
+      run: cmake -B ${{github.workspace}}/build
+
+    - name: Multi-Configure (Custom)
+      if: ${{ !matrix.single_config && matrix.config_flags != null }}
+      run: cmake -B ${{github.workspace}}/build -D ${{matrix.config_flags}}
+
+    - name: Build
+      run: cmake --build ${{github.workspace}}/build --config ${{matrix.build_type}}
+
+    - name: Test
+      working-directory: ${{github.workspace}}/build
+      run: ctest -C ${{matrix.build_type}}
+      env:
+        CTEST_OUTPUT_ON_FAILURE: True
+
+# Taken from doctest github
+  coverage:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install
+        run: sudo apt-get install -y ninja-build lcov
+
+      - name: Generate
+        run: cmake -B build -S . -G Ninja -D CMAKE_CXX_FLAGS="-fprofile-arcs -ftest-coverage"
+
+      - name: Build
+        run: cmake --build build
+
+      - name: Test
+        run: ctest --test-dir build --no-tests=error
+
+      - name: LCOV
+        run: |
+          mkdir coverage
+          lcov -c -d build/ -o coverage/lcov.info --include "*include/easy*"
+
+      - name: Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage/lcov.info
+          fail_ci_if_error: true
+
+# Taken from doctest github
+  clang-tidy:
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
+    runs-on: ubuntu-22.04
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install
+        run: sudo apt-get install -y ninja-build clang-tidy-14
+
+      - name: Generate
+        run: cmake -B build -S . -G Ninja -D CMAKE_CXX_COMPILER=clang++ -D CMAKE_EXPORT_COMPILE_COMMANDS=ON -D CMAKE_CXX_CLANG_TIDY="clang-tidy-14;-warnings-as-errors=*"
+
+      - name: Build
+        run: cmake --build build
