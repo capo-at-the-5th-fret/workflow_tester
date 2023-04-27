@@ -71,7 +71,7 @@ jobs:
 
     - name: Multi-Configure (Custom)
       if: ${{ !matrix.single_config && matrix.config_flags != null }}
-      run: cmake -B ${{env.build_dir}} -D ${{matrix.config_flags}}
+      run: cmake -B ${{env.build_dir}} ${{matrix.config_flags}}
 
     - name: Build
       working-directory: ${{env.build_dir}}
