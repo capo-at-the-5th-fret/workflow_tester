@@ -148,5 +148,5 @@ jobs:
       - name: Build
         run: cmake --build build
       - name: Run clang-tidy
-        working-directory: ${{env.build_dir}}/tests
+        working-directory: ${{env.build_dir}}
         run: "/usr/lib/llvm-15/bin/run-clang-tidy -config=\"{Checks: '-*,bugprone*,modernize*,performance*,readability*' }\" -header-filter=\"include[\\/]math.*\""
