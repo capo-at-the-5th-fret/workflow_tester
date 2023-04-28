@@ -101,8 +101,8 @@ jobs:
     - name: Test
       working-directory: ${{env.build_dir}}
       run: ctest -C ${{matrix.build_type}} --output-junit ${{matrix.build_type}}/junit-output/junit-report.xml
-      env:
-        CTEST_OUTPUT_ON_FAILURE: True
+      # env:
+      #   CTEST_OUTPUT_ON_FAILURE: True
 
     - name: Generate Test Report
       uses: dorny/test-reporter@v1.6.0
