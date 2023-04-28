@@ -30,10 +30,11 @@ jobs:
       - name: Install
         #run: choco install ninja
         run: sudo apt-get install -y ninja-build clang-tidy-14 #clang-15 clang-tidy-15
-      # - name: Find
-      #   run: |
-      #     dpkg -L clang-14
-      #     dpkg -L clang-tidy-14
+      - name: Find
+        run: |
+          dpkg -L llvm-14
+          dpkg -L clang-14
+          dpkg -L clang-tidy-14
 
       # Install dependencies via vcpkg so they aren't included in clang-tidy
       # checks
