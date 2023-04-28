@@ -50,4 +50,4 @@ jobs:
       - name: Run clang-tidy
         working-directory: ${{env.build_dir}}
         #,bugprone*,modernize*,performance*,readability*
-        run: "python \"C:\\Program Files\\LLVM\\bin\\run-clang-tidy\" -config=\"{Checks: '-*,clang-analyzer-*', WarningsAsErrors: '*' }\" -header-filter=\"include[\\/]math.*\""
+        run: "python \"C:\\Program Files\\LLVM\\bin\\run-clang-tidy\" -config=\"{Checks: '*', WarningsAsErrors: '*' }\" -header-filter=\"include[\\/]math.*\""
