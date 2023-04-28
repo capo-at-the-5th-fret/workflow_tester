@@ -1,12 +1,12 @@
 name: Microsoft C++ Code Analysis
 
-on: [ workflow_dispatch ]
+on: [ workflow_dispatch ] # push
 
 permissions:
   contents: read
 
 jobs:
-  analyze:
+  msvc_analysis:
     env:
       build_dir: ${{ github.workspace }}/build
       build_type: Debug
