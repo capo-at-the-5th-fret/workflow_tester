@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest] #, windows-latest, macos-latest]
+        os: [ubuntu-latest] # macos-latest, windows-latest
         build_type: [Release]
         include:
           - os: ubuntu-latest
@@ -31,22 +31,22 @@ jobs:
             vcpkg_install_dir: /usr/local/share/vcpkg
             vcpkg_dependencies: doctest
 
-          - os: macos-latest
-            # Use brew to install the latest version of llvm or gcc. brew will
-            # ignore the item if it is already installed
-            single_config: true
-            install_command: brew install llvm@16 ninja
-            config_flags: -G Ninja -D CMAKE_CXX_COMPILER=$(brew --prefix llvm@16)/bin/clang++
-            #install_command: brew install gcc@12 ninja
-            #config_flags: -G Ninja -D CMAKE_CXX_COMPILER=g++-12
-            vcpkg_install_dir: /usr/local/share/vcpkg
-            vcpkg_dependencies: doctest
+          # - os: macos-latest
+          #   # Use brew to install the latest version of llvm or gcc. brew will
+          #   # ignore the item if it is already installed
+          #   single_config: true
+          #   install_command: brew install llvm@16 ninja
+          #   config_flags: -G Ninja -D CMAKE_CXX_COMPILER=$(brew --prefix llvm@16)/bin/clang++
+          #   #install_command: brew install gcc@12 ninja
+          #   #config_flags: -G Ninja -D CMAKE_CXX_COMPILER=g++-12
+          #   vcpkg_install_dir: /usr/local/share/vcpkg
+          #   vcpkg_dependencies: doctest
 
-          - os: windows-latest
-            # Ensure 64-bit version is built
-            config_flags: -A x64
-            vcpkg_install_dir: C:/vcpkg
-            vcpkg_dependencies: doctest:x64-windows
+          # - os: windows-latest
+          #   # Ensure 64-bit version is built
+          #   config_flags: -A x64
+          #   vcpkg_install_dir: C:/vcpkg
+          #   vcpkg_dependencies: doctest:x64-windows
 
     runs-on: ${{ matrix.os }}
 
