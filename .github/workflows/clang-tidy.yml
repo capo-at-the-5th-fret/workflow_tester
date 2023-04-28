@@ -16,11 +16,11 @@ jobs:
       build_dir: ${{github.workspace}}/build
       clang_tidy_toolchain_file_path: C:/vcpkg/scripts/buildsystems/vcpkg.cmake
       clang_tidy_generator: Ninja
-      clang_tidy_compiler_path: /usr/bin/clang++-14
-      clang_tidy_path: /usr/bin/clang-tidy-14
+      clang_tidy_compiler_path: clang++ #/usr/bin/clang++-14
+      clang_tidy_path: clang-tidy #/usr/bin/clang-tidy-14
       #;-warnings-as-errors=*;-checks=*;-header-filter=."
       #clang-tidy-14;-*,bugprone*,modernize*,performance*,readability*,-modernize-pass-by-value,-modernize-use-auto,-modernize-use-using,-modernize-use-trailing-return-type,-modernize-use-nodiscard,-modernize-avoid-c-arrays,-readability-magic-numbers,-readability-identifier-length,-readability-named-parameter
-      clang_tidy_args: /usr/bin/clang-tidy-14;-warnings-as-errors=*
+      clang_tidy_args: clang-tidy;-warnings-as-errors=* #/usr/bin/clang-tidy-14;-warnings-as-errors=*
 
     steps:
       - uses: actions/checkout@v3
@@ -33,16 +33,16 @@ jobs:
       #     dpkg -L clang-14
       #     dpkg -L clang-tidy-14
       - name: Dependencies
-        run: vcpkg install doctest
+        run: vcpkg install doctest:x64-windows
           #cd /usr/local/share/vcpkg
           #ls
-      - name: Version
-        run: clang-tidy --version
+      # - name: Version
+      #   run: clang-tidy --version
 
-      # - name: Configure
-      #   run: cmake -B build -S . -G Ninja -D CMAKE_CXX_COMPILER=${{env.clang_tidy_compiler_path}} -D CMAKE_EXPORT_COMPILE_COMMANDS=ON -D CMAKE_TOOLCHAIN_FILE=${{env.clang_tidy_toolchain_file_path}} -D CMAKE_CXX_CLANG_TIDY="${{env.clang_tidy_args}}"
-      # - name: Build
-      #   run: cmake --build build
+      - name: Configure
+        run: cmake -B build -S . -G Ninja -D CMAKE_CXX_COMPILER=${{env.clang_tidy_compiler_path}} -D CMAKE_EXPORT_COMPILE_COMMANDS=ON -D CMAKE_TOOLCHAIN_FILE=${{env.clang_tidy_toolchain_file_path}} -D CMAKE_CXX_CLANG_TIDY="${{env.clang_tidy_args}}"
+      - name: Build
+        run: cmake --build build
       # - name: Run clang-tidy
       #   working-directory: ${{env.build_dir}}
       #   run: "/usr/lib/llvm-14/bin/run-clang-tidy -config=\"{Checks: '-*,bugprone*,modernize*,performance*,readability*' }\" -header-filter=\"include[\\/]math.*\""
