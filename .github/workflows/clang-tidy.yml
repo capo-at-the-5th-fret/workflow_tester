@@ -46,4 +46,4 @@ jobs:
         run: cmake --build build
       - name: Run clang-tidy
         working-directory: ${{env.build_dir}}
-        run: "python run-clang-tidy -config=\"{Checks: '-*,bugprone*,modernize*,performance*,readability*' }\" -header-filter=\"include[\\/]math.*\""
+        run: "python \"C:\\Program Files\\LLVM\\bin\\run-clang-tidy\" -config=\"{Checks: '-*,bugprone*,modernize*,performance*,readability*' }\" -header-filter=\"include[\\/]math.*\""
