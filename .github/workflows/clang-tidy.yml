@@ -36,7 +36,7 @@ jobs:
       #     dpkg -L clang-14
       #     dpkg -L clang-tidy-14
       - name: Set Variables
-        run: export LLVM_SYMBOLIZER_PATH=/usr/lib/llvm-14/bin/llvm-symbolizer
+        run: echo "LLVM_SYMBOLIZER_PATH=/usr/lib/llvm-14/bin/llvm-symbolizer" >> "$GITHUB_ENV"
 
       # Install dependencies via vcpkg so they aren't included in clang-tidy
       # checks
@@ -56,6 +56,4 @@ jobs:
         working-directory: ${{env.build_dir}}
         #,bugprone*,modernize*,performance*,readability*
         #run: "python \"C:\\Program Files\\LLVM\\bin\\run-clang-tidy\" -config=\"{Checks: '-*,clang-analyzer-*', WarningsAsErrors: '*' }\" -header-filter=\"include[\\/]math.*\""
-        run: |
-          export LLVM_SYMBOLIZER_PATH=/usr/lib/llvm-14/bin/llvm-symbolizer
-          "/usr/bin/run-clang-tidy-14 -config=\"{Checks: '*', WarningsAsErrors: '*' }\" -header-filter=\"include[\\/]math.*\""
+        run: "/usr/bin/run-clang-tidy-14 -config=\"{Checks: '*', WarningsAsErrors: '*' }\" -header-filter=\"include[\\/]math.*\""
