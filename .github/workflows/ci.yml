@@ -110,7 +110,7 @@ jobs:
       run: |
         cd ${{ matrix.build_type }}
         cd junit-output
-        ls -al
+        cat junit-report.xml
 
     - name: Generate Test Report
       uses: dorny/test-reporter@v1.6.0
