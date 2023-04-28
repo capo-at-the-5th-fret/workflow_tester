@@ -59,7 +59,7 @@ jobs:
           -D CMAKE_CXX_COMPILER=${{env.clang_tidy_compiler_path}}
           -D CMAKE_EXPORT_COMPILE_COMMANDS=ON
           -D CMAKE_TOOLCHAIN_FILE=${{env.clang_tidy_toolchain_file_path}}
-          -DCMAKE_CXX_CLANG_TIDY="clang-tidy;-checks=*"
+          -D CMAKE_CXX_CLANG_TIDY="clang-tidy;-checks=-*,clang-analyzer-*;-warnings-as-errors=*"
 
       - name: Build
         run: cmake --build build
