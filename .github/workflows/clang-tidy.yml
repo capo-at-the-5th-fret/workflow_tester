@@ -10,11 +10,12 @@ jobs:
 # Taken from doctest github
   clang-tidy:
     if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
-    runs-on: windows-latest
+    runs-on: ubuntu-latest #windows-latest
 
     env:
       build_dir: ${{github.workspace}}/build
-      clang_tidy_toolchain_file_path: C:/vcpkg/scripts/buildsystems/vcpkg.cmake
+      clang_tidy_toolchain_file_path: /usr/local/share/vcpkg/scripts/buildsystems/vcpkg.cmake
+      #clang_tidy_toolchain_file_path: C:/vcpkg/scripts/buildsystems/vcpkg.cmake
       clang_tidy_generator: Ninja
       clang_tidy_compiler_path: clang++ #/usr/bin/clang++-14
       clang_tidy_path: clang-tidy #/usr/bin/clang-tidy-14
@@ -23,12 +24,12 @@ jobs:
       clang_tidy_args: clang-tidy;-*,bugprone*,modernize*,performance*,readability* #/usr/bin/clang-tidy-14;-warnings-as-errors=*
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
 
       - name: Install
-        run: choco install ninja
-        #run: winget install llvm
-        #run: sudo apt-get install -y ninja-build clang-tidy-14 #clang-15 clang-tidy-15
+        #run: choco install ninja
+        run: sudo apt-get install -y ninja-build clang-tidy-14 #clang-15 clang-tidy-15
       # - name: Find
       #   run: |
       #     dpkg -L clang-14
@@ -37,7 +38,8 @@ jobs:
       # Install dependencies via vcpkg so they aren't included in clang-tidy
       # checks
       - name: Dependencies
-        run: vcpkg install doctest:x64-windows
+        #run: vcpkg install doctest:x64-windows
+        run: vcpkg install doctest
           #cd /usr/local/share/vcpkg
           #ls
       # - name: Version
@@ -50,4 +52,5 @@ jobs:
       - name: Run clang-tidy
         working-directory: ${{env.build_dir}}
         #,bugprone*,modernize*,performance*,readability*
-        run: "python \"C:\\Program Files\\LLVM\\bin\\run-clang-tidy\" -config=\"{Checks: '-*,clang-analyzer-*', WarningsAsErrors: '*' }\" -header-filter=\"include[\\/]math.*\""
+        #run: "python \"C:\\Program Files\\LLVM\\bin\\run-clang-tidy\" -config=\"{Checks: '-*,clang-analyzer-*', WarningsAsErrors: '*' }\" -header-filter=\"include[\\/]math.*\""
+        run: "/usr/bin/clang-tidy-14/run-clang-tidy -config=\"{Checks: '-*,clang-analyzer-*', WarningsAsErrors: '*' }\" -header-filter=\"include[\\/]math.*\""
