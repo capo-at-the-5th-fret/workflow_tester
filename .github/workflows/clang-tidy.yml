@@ -52,7 +52,7 @@ jobs:
         run: vcpkg install ${{ env.clang_tidy_vcpkg_dependencies }}
 
       - name: Configure
-        run: >
+        run: >-
           cmake -B build -S .
           -G Ninja
           -D CMAKE_BUILD_TYPE=Release
