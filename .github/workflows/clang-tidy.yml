@@ -10,7 +10,7 @@ jobs:
 # Taken from doctest github
   clang-tidy:
     if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
-    runs-on: ubuntu-latest #windows-latest
+    runs-on: windows-latest
 
     env:
       build_dir: ${{github.workspace}}/build
