@@ -96,7 +96,7 @@ jobs:
 
     - name: Build
       working-directory: ${{env.build_dir}}
-      run: cmake --build . --config ${{matrix.build_type}}
+      run: cmake --build . --target testrunner --config ${{matrix.build_type}}
 
     - name: Test
       working-directory: ${{env.build_dir}}
@@ -110,6 +110,7 @@ jobs:
         cd ${{ matrix.build_type }}
         cd junit-output
         ls -al
+
     - name: Generate Test Report
       uses: dorny/test-reporter@v1.6.0
       if: success() || failure()
