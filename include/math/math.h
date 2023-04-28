@@ -7,7 +7,7 @@ namespace math
         return x + y;
     }
 
-    inline int subtrace(int x, int y)
+    inline int subtract(int x, int y)
     {
         return x - y;
     }

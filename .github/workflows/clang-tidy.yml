@@ -33,6 +33,9 @@ jobs:
       #   run: |
       #     dpkg -L clang-14
       #     dpkg -L clang-tidy-14
+
+      # Install dependencies via vcpkg so they aren't included in clang-tidy
+      # checks
       - name: Dependencies
         run: vcpkg install doctest:x64-windows
           #cd /usr/local/share/vcpkg
