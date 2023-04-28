@@ -103,7 +103,6 @@ jobs:
     - name: Temp
       working-directory: ${{env.build_dir}}
       run: |
-        cd build
         cd ${{matrix.build_type}}
         cd junit-output
         ls
