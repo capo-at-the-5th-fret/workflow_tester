@@ -52,13 +52,20 @@ jobs:
         run: vcpkg install ${{ env.clang_tidy_vcpkg_dependencies }}
 
       - name: Configure
-        run: cmake -B build -S . -G Ninja -D CMAKE_BUILD_TYPE=RelWithDebInfo -D CMAKE_CXX_COMPILER=${{env.clang_tidy_compiler_path}} -D CMAKE_EXPORT_COMPILE_COMMANDS=ON -D CMAKE_TOOLCHAIN_FILE=${{env.clang_tidy_toolchain_file_path}} #-D CMAKE_CXX_CLANG_TIDY="${{env.clang_tidy_args}}"
+        run: |
+          cmake -B build -S . \
+          -G Ninja \
+          -D CMAKE_BUILD_TYPE=Release \
+          -D CMAKE_CXX_COMPILER=${{env.clang_tidy_compiler_path}} \
+          -D CMAKE_EXPORT_COMPILE_COMMANDS=ON \
+          -D CMAKE_TOOLCHAIN_FILE=${{env.clang_tidy_toolchain_file_path}} \
+          -DCMAKE_CXX_CLANG_TIDY="clang-tidy;-checks=*"
 
       - name: Build
         run: cmake --build build
 
-      - name: Run clang-tidy
-        working-directory: ${{env.build_dir}}
-        #,bugprone*,modernize*,performance*,readability*
-        run: "python \"C:\\Program Files\\LLVM\\bin\\run-clang-tidy\" -config=\"{Checks: '-*,clang-analyzer-*', WarningsAsErrors: '*' }\" -header-filter=\"include[\\/]math.*\""
-        #run: "/usr/bin/run-clang-tidy-14 -config=\"{Checks: '*', WarningsAsErrors: '*' }\" -header-filter=\"include[\\/]math.*\""
+      # - name: Run clang-tidy
+      #   working-directory: ${{env.build_dir}}
+      #   #,bugprone*,modernize*,performance*,readability*
+      #   run: "python \"C:\\Program Files\\LLVM\\bin\\run-clang-tidy\" -config=\"{Checks: '-*,clang-analyzer-*', WarningsAsErrors: '*' }\" -header-filter=\"include[\\/]math.*\""
+      #   #run: "/usr/bin/run-clang-tidy-14 -config=\"{Checks: '*', WarningsAsErrors: '*' }\" -header-filter=\"include[\\/]math.*\""
