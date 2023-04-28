@@ -7,6 +7,9 @@ on: [ workflow_dispatch ] # push
 #   pull_request:
 #     branches: [ "main", "fix*" ]
 
+permissions:
+  contents: read
+
 jobs:
   build:
     strategy:
@@ -95,22 +98,15 @@ jobs:
 
     - name: Test
       working-directory: ${{env.build_dir}}
-      #run: ./tests/testrunner -o "junit-report.xml" -r junit
       run: ctest -C ${{matrix.build_type}} --output-junit ${{matrix.build_type}}/junit-output/junit-report.xml
       env:
         CTEST_OUTPUT_ON_FAILURE: True
 
-    - name: Temp
-      working-directory: ${{env.build_dir}}
-      run: |
-        cd ${{matrix.build_type}}
-        cd junit-output
-        ls
     - name: Generate Test Report
       uses: dorny/test-reporter@v1.5.0
       if: success() || failure()
       with:
-        name: go-tests - ${{ matrix.os }} - ${{ matrix.build_type }}
+        name: go-tests-${{ matrix.os }}-${{ matrix.build_type }}
         path: build/${{ matrix.build_type }}/junit-output/*
         reporter: java-junit
 
