@@ -22,7 +22,7 @@ jobs:
       clang_tidy_vcpkg_dependencies: doctest:x64-windows
       clang_tidy_compiler_path: clang++
       clang_tidy_path: clang-tidy
-      clang_tidy_args: clang-tidy;-*,bugprone*,modernize*,performance*,readability* #/usr/bin/clang-tidy-14;-warnings-as-errors=*
+      clang_tidy_args: "clang-tidy;-config=\"{Checks: '*', WarningsAsErrors: '*' }\" -header-filter=\"include[\\/]math.*\""
 
       # ubuntu
       #clang_tidy_install_command: sudo apt-get install -y ninja-build clang-tidy-14 #clang-15 clang-tidy-15
