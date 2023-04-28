@@ -29,7 +29,7 @@ jobs:
         id: run-analysis
         with:
           cmakeBuildDirectory: ${{ env.build_dir }}
-          buildConfiguration: ${{ matrix.build_type }}
+          buildConfiguration: ${{ env.build_type }}
           ruleset: NativeRecommendedRules.ruleset
           ignoredPaths: ${{ github.workspace }}/_deps;${{ github.workspace }}/tests
 
