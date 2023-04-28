@@ -56,4 +56,6 @@ jobs:
         working-directory: ${{env.build_dir}}
         #,bugprone*,modernize*,performance*,readability*
         #run: "python \"C:\\Program Files\\LLVM\\bin\\run-clang-tidy\" -config=\"{Checks: '-*,clang-analyzer-*', WarningsAsErrors: '*' }\" -header-filter=\"include[\\/]math.*\""
-        run: "/usr/bin/run-clang-tidy-14 -config=\"{Checks: '*', WarningsAsErrors: '*' }\" -header-filter=\"include[\\/]math.*\""
+        run: |
+          export LLVM_SYMBOLIZER_PATH=/usr/lib/llvm-14/bin/llvm-symbolizer
+          "/usr/bin/run-clang-tidy-14 -config=\"{Checks: '*', WarningsAsErrors: '*' }\" -header-filter=\"include[\\/]math.*\""
