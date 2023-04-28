@@ -14,46 +14,51 @@ jobs:
 
     env:
       build_dir: ${{github.workspace}}/build
-      clang_tidy_toolchain_file_path: /usr/local/share/vcpkg/scripts/buildsystems/vcpkg.cmake
-      #clang_tidy_toolchain_file_path: C:/vcpkg/scripts/buildsystems/vcpkg.cmake
       clang_tidy_generator: Ninja
-      clang_tidy_compiler_path: clang++ #/usr/bin/clang++-14
-      clang_tidy_path: clang-tidy #/usr/bin/clang-tidy-14
+
+      # windows
+      clang_tidy_install_command: choco install ninja
+      clang_tidy_toolchain_file_path: C:/vcpkg/scripts/buildsystems/vcpkg.cmake
+      clang_tidy_vcpkg_dependencies: doctest:x64-windows
+      clang_tidy_compiler_path: clang++
+      clang_tidy_path: clang-tidy
+      clang_tidy_args: clang-tidy;-*,bugprone*,modernize*,performance*,readability* #/usr/bin/clang-tidy-14;-warnings-as-errors=*
+
+      # ubuntu
+      #clang_tidy_install_command: sudo apt-get install -y ninja-build clang-tidy-14 #clang-15 clang-tidy-15
+      #clang_tidy_toolchain_file_path: /usr/local/share/vcpkg/scripts/buildsystems/vcpkg.cmake
+      #clang_tidy_compiler_path: clang++ #/usr/bin/clang++-14
+      #clang_tidy_path: clang-tidy #/usr/bin/clang-tidy-14
       #;-warnings-as-errors=*;-checks=*;-header-filter=."
       #clang-tidy-14;-*,bugprone*,modernize*,performance*,readability*,-modernize-pass-by-value,-modernize-use-auto,-modernize-use-using,-modernize-use-trailing-return-type,-modernize-use-nodiscard,-modernize-avoid-c-arrays,-readability-magic-numbers,-readability-identifier-length,-readability-named-parameter
-      clang_tidy_args: clang-tidy;-*,bugprone*,modernize*,performance*,readability* #/usr/bin/clang-tidy-14;-warnings-as-errors=*
+      #clang_tidy_args: clang-tidy;-*,bugprone*,modernize*,performance*,readability* #/usr/bin/clang-tidy-14;-warnings-as-errors=*
 
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
       - name: Install
-        #run: choco install ninja
-        run: sudo apt-get install -y ninja-build clang-tidy-14 #clang-15 clang-tidy-15
+        run: ${{ env.clang_tidy_install_command }}
+
       # - name: Find
       #   run: |
       #     dpkg -L llvm-14
       #     dpkg -L clang-14
       #     dpkg -L clang-tidy-14
-      - name: Set Variables
-        run: echo "LLVM_SYMBOLIZER_PATH=/usr/lib/llvm-14/bin/llvm-symbolizer" >> "$GITHUB_ENV"
 
       # Install dependencies via vcpkg so they aren't included in clang-tidy
-      # checks
+      # checks (the _deps folder is included in the checks; no way to avoid)
       - name: Dependencies
-        #run: vcpkg install doctest:x64-windows
-        run: vcpkg install doctest
-          #cd /usr/local/share/vcpkg
-          #ls
-      # - name: Version
-      #   run: clang-tidy --version
+        run: vcpkg install ${{ clang_tidy_vcpkg_dependencies }}
 
       - name: Configure
         run: cmake -B build -S . -G Ninja -D CMAKE_BUILD_TYPE=RelWithDebInfo -D CMAKE_CXX_COMPILER=${{env.clang_tidy_compiler_path}} -D CMAKE_EXPORT_COMPILE_COMMANDS=ON -D CMAKE_TOOLCHAIN_FILE=${{env.clang_tidy_toolchain_file_path}} #-D CMAKE_CXX_CLANG_TIDY="${{env.clang_tidy_args}}"
+
       - name: Build
         run: cmake --build build
+
       - name: Run clang-tidy
         working-directory: ${{env.build_dir}}
         #,bugprone*,modernize*,performance*,readability*
-        #run: "python \"C:\\Program Files\\LLVM\\bin\\run-clang-tidy\" -config=\"{Checks: '-*,clang-analyzer-*', WarningsAsErrors: '*' }\" -header-filter=\"include[\\/]math.*\""
-        run: "/usr/bin/run-clang-tidy-14 -config=\"{Checks: '*', WarningsAsErrors: '*' }\" -header-filter=\"include[\\/]math.*\""
+        run: "python \"C:\\Program Files\\LLVM\\bin\\run-clang-tidy\" -config=\"{Checks: '-*,clang-analyzer-*', WarningsAsErrors: '*' }\" -header-filter=\"include[\\/]math.*\""
+        #run: "/usr/bin/run-clang-tidy-14 -config=\"{Checks: '*', WarningsAsErrors: '*' }\" -header-filter=\"include[\\/]math.*\""
