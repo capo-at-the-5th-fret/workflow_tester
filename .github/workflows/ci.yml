@@ -9,6 +9,11 @@ on: [ workflow_dispatch ] # push
 
 jobs:
   build:
+    permissions:
+      #id-token: write
+      contents: read      # for actions/checkout to fetch code
+      checks: write       # for writing check run test reports
+
     strategy:
       fail-fast: false
       matrix:
@@ -103,7 +108,7 @@ jobs:
       uses: dorny/test-reporter@v1.6.0
       if: success() || failure()
       with:
-        name: go-tests-${{ matrix.os }}-${{ matrix.build_type }}
+        name: test-report-(${{ matrix.os }},-${{ matrix.build_type }})
         path: build/${{ matrix.build_type }}/junit-output/*
         reporter: java-junit
 
