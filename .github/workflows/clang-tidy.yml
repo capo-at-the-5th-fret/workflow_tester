@@ -49,7 +49,7 @@ jobs:
       # Install dependencies via vcpkg so they aren't included in clang-tidy
       # checks (the _deps folder is included in the checks; no way to avoid)
       - name: Dependencies
-        run: vcpkg install ${{ clang_tidy_vcpkg_dependencies }}
+        run: vcpkg install ${{ env.clang_tidy_vcpkg_dependencies }}
 
       - name: Configure
         run: cmake -B build -S . -G Ninja -D CMAKE_BUILD_TYPE=RelWithDebInfo -D CMAKE_CXX_COMPILER=${{env.clang_tidy_compiler_path}} -D CMAKE_EXPORT_COMPILE_COMMANDS=ON -D CMAKE_TOOLCHAIN_FILE=${{env.clang_tidy_toolchain_file_path}} #-D CMAKE_CXX_CLANG_TIDY="${{env.clang_tidy_args}}"
