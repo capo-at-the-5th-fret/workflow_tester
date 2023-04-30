@@ -11,18 +11,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
+
     - name: Set up CMake
-      uses: jacobtomlinson/cmake-actions@v1
+      uses: cmake/setup-cmake@v1
       with:
         cmakeListsTxtPath: 'CMakeLists.txt'
         buildDir: 'build'
         installDir: 'install'
         cmakeArgs: '-DCMAKE_BUILD_TYPE=Release'
+
     - name: Build
       run: cmake --build build --config Release
+
     - name: Clang-Tidy
       run: |
         cd build
         cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
-        clang-tidy -p . include/*
+        clang-tidy -p . src/*
