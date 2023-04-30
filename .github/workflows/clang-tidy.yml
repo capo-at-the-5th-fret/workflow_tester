@@ -1,24 +1,28 @@
-# Run clang-tidy
-name: Clang-tidy
+name: Clang-Tidy
 
 on: [workflow_dispatch]
   # push:
-  #   branches: [ workflow_dispatch ]
+  #   branches: [ main ]
   # pull_request:
-  #   branches: [ workflow_dispatch ]
+  #   branches: [ main ]
 
 jobs:
-  checkout-and-check-formatting:
+  build:
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
-    - name: Run clang-tidy
-      uses: HorstBaerbel/action-clang-tidy@1.2
-      # These are optional (defaults displayed)
+    - name: Set up CMake
+      uses: jacobtomlinson/cmake-actions@v1
       with:
-        scandir: '.'
-        builddir: 'build'
-        excludedirs: ''
-        #extensions: 'c,h,C,H,cpp,hpp,cc,hh,c++,h++,cxx,hxx'
-        cmakeoptions: ''
+        cmakeListsTxtPath: 'CMakeLists.txt'
+        buildDir: 'build'
+        installDir: 'install'
+        cmakeArgs: '-DCMAKE_BUILD_TYPE=Release'
+    - name: Build
+      run: cmake --build build --config Release
+    - name: Clang-Tidy
+      run: |
+        cd build
+        cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
+        clang-tidy -p . include/*
