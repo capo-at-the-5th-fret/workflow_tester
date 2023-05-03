@@ -45,6 +45,7 @@ jobs:
     #     variant: ${{ matrix.ccache_variant }}
 
     - name: Build
+      if: runner.os != 'Windows'
       uses: lukka/run-cmake@v3.4
       with:
         cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
