@@ -44,10 +44,10 @@ jobs:
     #     SET 
     #     export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
 
-    - name: Setup (non-Windows)
-      if: runner.os != 'Windows'
-      run: |
-        export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
+    # - name: Setup (non-Windows)
+    #   if: runner.os != 'Windows'
+    #   run: |
+    #     export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
 
     - name: Config
       run: cmake -B build -D CMAKE_CXX_COMPILER_LAUNCHER=${{ matrix.variant }}
