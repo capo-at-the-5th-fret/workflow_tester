@@ -11,10 +11,13 @@ jobs:
     strategy:
         fail-fast: false
         matrix:
-          os: [ubuntu-latest, macos-latest]
+          os: [ ubuntu-latest, macos-latest ]
+          variant: [ ccache ]
+          include:
+          - os: windows-latest
+            variant: sccache
 
     runs-on: ${{ matrix.os }}
-    #runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v3
@@ -33,13 +36,14 @@ jobs:
       uses: hendrikmuhs/ccache-action@v1.2
       with:
         key: ${{ github.job }}-${{ matrix.os }}  # Eg. "some_build-ubuntu-latest"
+        variant: $${ matrix.variant }}
 
-    - name: Setup
+    - name: Setup (non-Windows)
       run: |
         export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
 
-    - name: Config
-      run: cmake -B build -D CMAKE_CXX_COMPILER_LAUNCHER=ccache
+    - name: Config (non-Windows)
+      run: cmake -B build -D CMAKE_CXX_COMPILER_LAUNCHER=${{ matrix.variant }}
 
     - name: Build
       run: cmake --build build --config Release
