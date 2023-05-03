@@ -19,7 +19,7 @@ jobs:
 
     runs-on: ${{ matrix.os }}
 
-    name: ccache (${{ matrix.os }})
+    name: build (${{ matrix.os }})
 
     steps:
     - uses: actions/checkout@v3
