@@ -36,7 +36,7 @@ jobs:
       uses: hendrikmuhs/ccache-action@v1.2
       with:
         key: ${{ github.job }}-${{ matrix.os }}  # Eg. "some_build-ubuntu-latest"
-        variant: ${ matrix.variant }}
+        variant: ${{ matrix.variant }}
 
     - name: Setup (non-Windows)
       run: |
