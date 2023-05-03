@@ -8,10 +8,14 @@ on: [ workflow_dispatch ]
 
 jobs:
   build:
+    env:
+      build_dir: build
+
     strategy:
         fail-fast: false
         matrix:
           os: [ ubuntu-latest, macos-latest, windows-latest ]
+          build_type: [ Release]
           ccache_variant: [ ccache ]
           include:
           - os: windows-latest
@@ -19,7 +23,7 @@ jobs:
 
     runs-on: ${{ matrix.os }}
 
-    name: build (${{ matrix.os }})
+    name: build (${{ matrix.os }} - ${{ matrix.build_type }})
 
     steps:
     - uses: actions/checkout@v3
@@ -27,14 +31,17 @@ jobs:
     - name: ccache
       uses: hendrikmuhs/ccache-action@v1.2
       with:
-        key: ${{ github.job }}-${{ matrix.os }}  # Eg. "some_build-ubuntu-latest"
+        key: ${{ github.job }}-${{ matrix.os }}-${{ matrix.build_type }}  # Eg. "some_build-ubuntu-latest"
         variant: ${{ matrix.ccache_variant }}
 
     - name: Config
-      run: cmake -B build -D CMAKE_CXX_COMPILER_LAUNCHER=${{ matrix.ccache_variant }}
+      run: >-
+        cmake -B ${{ env.build_dir }}
+          -D CMAKE_BUILD_TYPE=${{ matrix.build_type }}
+          -D CMAKE_CXX_COMPILER_LAUNCHER=${{ matrix.ccache_variant }}
 
     - name: Build
-      run: cmake --build build --config Release
+      run: cmake --build ${{ env.build_dir }} --config ${{ matrix.build_type }}
 
     # - name: Clang-Tidy
     #   run: |
