@@ -30,6 +30,10 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
+    - name: Setup
+      if: runner.os == 'Windows'
+      run: mkdir ./.sccache
+
     - name: Ccache
       uses: hendrikmuhs/ccache-action@v1.2.9
       with:
