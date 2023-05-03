@@ -37,6 +37,7 @@ jobs:
         variant: ${{ matrix.ccache_variant }}
 
     - name: Config
+      if: runner.os != 'Windows'
       run: >-
         cmake -B ${{ env.build_dir }}
         -D CMAKE_BUILD_TYPE=${{ matrix.build_type }}
