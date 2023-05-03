@@ -24,7 +24,7 @@ jobs:
 
     runs-on: ${{ matrix.os }}
 
-    name: build (${{ matrix.os }} - ${{ matrix.build_type }})
+    #name: build (${{ matrix.os }} - ${{ matrix.build_type }})
 
     steps:
     - uses: actions/checkout@v3
