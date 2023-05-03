@@ -1,0 +1,41 @@
+name: Clang-Tidy
+
+on: [workflow_dispatch]
+  # push:
+  #   branches: [ main ]
+  # pull_request:
+  #   branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - uses: lukka/get-cmake@latest
+
+    # - name: Set up CMake
+    #   uses: cmake/setup-cmake@v1
+    #   with:
+    #     cmakeListsTxtPath: 'CMakeLists.txt'
+    #     buildDir: 'build'
+    #     installDir: 'install'
+    #     cmakeArgs: '-DCMAKE_BUILD_TYPE=Release'
+
+    - name: ccache
+      uses: hendrikmuhs/ccache-action@v1.2
+      with:
+        key: ${{ github.job }}-${{ matrix.os }}  # Eg. "some_build-ubuntu-latest"
+
+    - name: Config
+      run: cmake -B build
+
+    - name: Build
+      run: cmake --build build --config Release
+
+    # - name: Clang-Tidy
+    #   run: |
+    #     cd build
+    #     cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
+    #     clang-tidy -p .
