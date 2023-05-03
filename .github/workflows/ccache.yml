@@ -37,12 +37,12 @@ jobs:
     #   if: runner.os == 'Windows'
     #   run: mkdir ./.sccache
 
-    - name: Ccache
-      if: runner.os != 'Windows'
-      uses: hendrikmuhs/ccache-action@v1.2.9
-      with:
-        key: ${{ github.job }}-${{ matrix.os }}-${{ matrix.build_type }}  # Eg. "some_build-ubuntu-latest"
-        variant: ${{ matrix.ccache_variant }}
+    # - name: Ccache
+    #   if: runner.os != 'Windows'
+    #   uses: hendrikmuhs/ccache-action@v1.2.9
+    #   with:
+    #     key: ${{ github.job }}-${{ matrix.os }}-${{ matrix.build_type }}  # Eg. "some_build-ubuntu-latest"
+    #     variant: ${{ matrix.ccache_variant }}
 
     - name: Build
       uses: lukka/run-cmake@v3
