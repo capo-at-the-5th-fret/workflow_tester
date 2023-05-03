@@ -20,6 +20,7 @@ jobs:
           - ccache_variant: ccache
           - os: windows-latest
             ccache_variant: sccache
+            sccache-path: /home/runner/.cache/sccache
 
     runs-on: ${{ matrix.os }}
 
