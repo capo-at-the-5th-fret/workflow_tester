@@ -1,6 +1,6 @@
 name: ccache
 
-on: [workflow_dispatch]
+on: [ workflow_dispatch ]
   # push:
   #   branches: [ main ]
   # pull_request:
@@ -11,32 +11,36 @@ jobs:
     strategy:
         fail-fast: false
         matrix:
-          os: [ ubuntu-latest, macos-latest ]
-          variant: [ ccache ]
+          os: [ ubuntu-latest, macos-latest, windows-latest ]
+          ccache_variant: [ ccache ]
           include:
           - os: windows-latest
-            variant: sccache
+            ccache_variant: ccache
 
     runs-on: ${{ matrix.os }}
 
+    name: ccache (${{ matrix.os }})
+
     steps:
     - uses: actions/checkout@v3
-
-    #- uses: lukka/get-cmake@latest
-
-    # - name: Set up CMake
-    #   uses: cmake/setup-cmake@v1
-    #   with:
-    #     cmakeListsTxtPath: 'CMakeLists.txt'
-    #     buildDir: 'build'
-    #     installDir: 'install'
-    #     cmakeArgs: '-DCMAKE_BUILD_TYPE=Release'
 
     - name: ccache
       uses: hendrikmuhs/ccache-action@v1.2
       with:
         key: ${{ github.job }}-${{ matrix.os }}  # Eg. "some_build-ubuntu-latest"
-        variant: ${{ matrix.variant }}
+        variant: ${{ matrix.ccache_variant }}
+
+    - name: Config
+      run: cmake -B build -D CMAKE_CXX_COMPILER_LAUNCHER=${{ matrix.ccache_variant }}
+
+    - name: Build
+      run: cmake --build build --config Release
+
+    # - name: Clang-Tidy
+    #   run: |
+    #     cd build
+    #     cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
+    #     clang-tidy -p .
 
     # - name: Setup (Windows)
     #   if: runner.os == 'Windows'
@@ -49,14 +53,12 @@ jobs:
     #   run: |
     #     export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
 
-    - name: Config
-      run: cmake -B build -D CMAKE_CXX_COMPILER_LAUNCHER=${{ matrix.variant }}
+    #- uses: lukka/get-cmake@latest
 
-    - name: Build
-      run: cmake --build build --config Release
-
-    # - name: Clang-Tidy
-    #   run: |
-    #     cd build
-    #     cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
-    #     clang-tidy -p .
+    # - name: Set up CMake
+    #   uses: cmake/setup-cmake@v1
+    #   with:
+    #     cmakeListsTxtPath: 'CMakeLists.txt'
+    #     buildDir: 'build'
+    #     installDir: 'install'
+    #     cmakeArgs: '-DCMAKE_BUILD_TYPE=Release'
