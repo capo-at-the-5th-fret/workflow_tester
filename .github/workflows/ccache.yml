@@ -35,10 +35,10 @@ jobs:
         variant: ${{ matrix.ccache_variant }}
 
     - name: Config
-      run: >
+      run: >-
         cmake -B ${{ env.build_dir }}
-          -D CMAKE_BUILD_TYPE=${{ matrix.build_type }}
-          -D CMAKE_CXX_COMPILER_LAUNCHER=${{ matrix.ccache_variant }}
+        -D CMAKE_BUILD_TYPE=${{ matrix.build_type }}
+        -D CMAKE_CXX_COMPILER_LAUNCHER=${{ matrix.ccache_variant }}
 
     - name: Build
       run: cmake --build ${{ env.build_dir }} --config ${{ matrix.build_type }}
