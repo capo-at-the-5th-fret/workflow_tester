@@ -49,7 +49,7 @@ jobs:
       with:
         cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
         cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
-        cmakeAppendedArgs: '-DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -D CMAKE_CXX_COMPILER_LAUNCHER=${{ matrix.ccache_variant}}'
+        cmakeAppendedArgs: '-DCMAKE_BUILD_TYPE=${{ matrix.build_type }}' #-D CMAKE_CXX_COMPILER_LAUNCHER=${{ matrix.ccache_variant}}
         buildWithCMake: true
         buildDirectory: '${{ env.build_dir }}'
 
