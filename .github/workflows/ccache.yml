@@ -19,7 +19,7 @@ jobs:
           ccache_variant: [ ccache ]
           include:
           - os: windows-latest
-            ccache_variant: ccache
+            ccache_variant: sccache
 
     runs-on: ${{ matrix.os }}
 
