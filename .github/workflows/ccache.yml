@@ -1,10 +1,13 @@
 name: Ccache
 
-on: [ workflow_dispatch ]
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
   # push:
-  #   branches: [ main ]
   # pull_request:
   #   branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
 
 jobs:
   build:
@@ -40,23 +43,32 @@ jobs:
         key: ${{ github.job }}-${{ matrix.os }}-${{ matrix.build_type }}  # Eg. "some_build-ubuntu-latest"
         variant: ${{ matrix.ccache_variant }}
 
-    - name: Config
-      if: runner.os != 'Windows'
-      run: >-
-        cmake -B ${{ env.build_dir }}
-        -D CMAKE_BUILD_TYPE=${{ matrix.build_type }}
-        -D CMAKE_CXX_COMPILER_LAUNCHER=${{ matrix.ccache_variant }}
+    - name: CMake Build
+      uses: lukka/run-cmake@v3
+      with:
+        cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
+        cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
+        cmakeAppendedArgs: '-DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -D CMAKE_CXX_COMPILER_LAUNCHER=${{ matrix.ccache_variant}}'
+        buildWithCMake: true
+        buildDirectory: '${{ env.build_dir }}'
 
-    - name: Config (Windows)
-      if: runner.os == 'Windows'
-      run: >-
-        cmake -B ${{ env.build_dir }}
-        -D CMAKE_CXX_COMPILER="${{ matrix.cxx_compiler }}"
-        -D CMAKE_BUILD_TYPE=${{ matrix.build_type }}
-        -D CMAKE_CXX_COMPILER_LAUNCHER=${{ matrix.ccache_variant }}
+    # - name: Config
+    #   if: runner.os != 'Windows'
+    #   run: >-
+    #     cmake -B ${{ env.build_dir }}
+    #     -D CMAKE_BUILD_TYPE=${{ matrix.build_type }}
+    #     -D CMAKE_CXX_COMPILER_LAUNCHER=${{ matrix.ccache_variant }}
 
-    - name: Build
-      run: cmake --build ${{ env.build_dir }} --config ${{ matrix.build_type }}
+    # - name: Config (Windows)
+    #   if: runner.os == 'Windows'
+    #   run: >-
+    #     cmake -B ${{ env.build_dir }}
+    #     -D CMAKE_CXX_COMPILER="${{ matrix.cxx_compiler }}"
+    #     -D CMAKE_BUILD_TYPE=${{ matrix.build_type }}
+    #     -D CMAKE_CXX_COMPILER_LAUNCHER=${{ matrix.ccache_variant }}
+
+    # - name: Build
+    #   run: cmake --build ${{ env.build_dir }} --config ${{ matrix.build_type }}
 
     # - name: Clang-Tidy
     #   run: |
