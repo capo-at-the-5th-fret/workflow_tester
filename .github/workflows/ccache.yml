@@ -47,7 +47,7 @@ jobs:
       if: runner.os == 'Windows'
       run: >-
         cmake -B ${{ env.build_dir }}
-        -D CMAKE_CXX_COMPILER=${{ matrix.cxx }}
+        -D CMAKE_CXX_COMPILER=${{ matrix.cxx_compiler }}
         -D CMAKE_BUILD_TYPE=${{ matrix.build_type }}
         -D CMAKE_CXX_COMPILER_LAUNCHER=${{ matrix.ccache_variant }}
 
