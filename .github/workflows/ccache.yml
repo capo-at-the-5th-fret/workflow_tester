@@ -33,22 +33,33 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Setup
-      if: runner.os == 'Windows'
-      run: mkdir ./.sccache
+    # - name: Setup
+    #   if: runner.os == 'Windows'
+    #   run: mkdir ./.sccache
 
     - name: Ccache
+      if: runner.os != 'Windows'
       uses: hendrikmuhs/ccache-action@v1.2.9
       with:
         key: ${{ github.job }}-${{ matrix.os }}-${{ matrix.build_type }}  # Eg. "some_build-ubuntu-latest"
         variant: ${{ matrix.ccache_variant }}
 
-    - name: CMake Build
+    - name: Build
       uses: lukka/run-cmake@v3
       with:
         cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
         cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
         cmakeAppendedArgs: '-DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -D CMAKE_CXX_COMPILER_LAUNCHER=${{ matrix.ccache_variant}}'
+        buildWithCMake: true
+        buildDirectory: '${{ env.build_dir }}'
+
+    - name: Build (${{ runner.os }})
+      if: runner.os == 'Windows'
+      uses: lukka/run-cmake@v3
+      with:
+        cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
+        cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
+        cmakeAppendedArgs: '-DCMAKE_BUILD_TYPE=${{ matrix.build_type }}'
         buildWithCMake: true
         buildDirectory: '${{ env.build_dir }}'
 
