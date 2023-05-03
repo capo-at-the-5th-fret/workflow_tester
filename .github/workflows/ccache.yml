@@ -1,4 +1,4 @@
-name: Clang-Tidy
+name: ccache
 
 on: [workflow_dispatch]
   # push:
