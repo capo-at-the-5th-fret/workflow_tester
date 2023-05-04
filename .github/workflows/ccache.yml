@@ -53,7 +53,7 @@ jobs:
 
     - name: Config (Windows)
       if: runner.os == 'Windows'
-      run: cmake -G Ninja -B ${{ env.build_dir }}
+      run: cmake -B ${{ env.build_dir }}
         # cmake -B ${{ env.build_dir }}
         # -D CMAKE_CXX_COMPILER="${{ matrix.cxx_compiler }}"
         # -D CMAKE_BUILD_TYPE=${{ matrix.build_type }}
