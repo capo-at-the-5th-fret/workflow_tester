@@ -23,8 +23,8 @@ jobs:
           - ccache_variant: ccache
           - os: windows-latest
             ccache_variant: sccache
-            sccache-path: /home/runner/.cache/sccache
-            cxx_compiler: C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Tools/MSVC/14.34.31933/bin/HostX64/x64/cl.exe
+            #sccache-path: /home/runner/.cache/sccache
+            #cxx_compiler: C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Tools/MSVC/14.34.31933/bin/HostX64/x64/cl.exe
 
     runs-on: ${{ matrix.os }}
 
@@ -37,50 +37,30 @@ jobs:
     #   if: runner.os == 'Windows'
     #   run: mkdir ./.sccache
 
-    # - name: Ccache
-    #   if: runner.os != 'Windows'
-    #   uses: hendrikmuhs/ccache-action@v1.2.9
-    #   with:
-    #     key: ${{ github.job }}-${{ matrix.os }}-${{ matrix.build_type }}  # Eg. "some_build-ubuntu-latest"
-    #     variant: ${{ matrix.ccache_variant }}
+    - name: Ccache
+      if: runner.os != 'Windows'
+      uses: hendrikmuhs/ccache-action@v1.2.9
+      with:
+        key: ${{ github.job }}-${{ matrix.os }}-${{ matrix.build_type }}  # Eg. "some_build-ubuntu-latest"
+        variant: ${{ matrix.ccache_variant }}
+
+    - name: Config
+      if: runner.os != 'Windows'
+      run: >-
+        cmake -B ${{ env.build_dir }}
+        -D CMAKE_BUILD_TYPE=${{ matrix.build_type }}
+        -D CMAKE_CXX_COMPILER_LAUNCHER=${{ matrix.ccache_variant }}
+
+    - name: Config (Windows)
+      if: runner.os == 'Windows'
+      run: cmake -G Ninja -B ${{ env.build_dir }}
+        # cmake -B ${{ env.build_dir }}
+        # -D CMAKE_CXX_COMPILER="${{ matrix.cxx_compiler }}"
+        # -D CMAKE_BUILD_TYPE=${{ matrix.build_type }}
+        # -D CMAKE_CXX_COMPILER_LAUNCHER=${{ matrix.ccache_variant }}
 
     - name: Build
-      if: runner.os != 'Windows'
-      uses: lukka/run-cmake@v3.4
-      with:
-        cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
-        cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
-        cmakeAppendedArgs: '-DCMAKE_BUILD_TYPE=${{ matrix.build_type }}' #-D CMAKE_CXX_COMPILER_LAUNCHER=${{ matrix.ccache_variant}}
-        buildWithCMake: true
-        buildDirectory: '${{ env.build_dir }}'
-
-    - name: Build (${{ runner.os }})
-      if: runner.os == 'Windows'
-      uses: lukka/run-cmake@v3.4
-      with:
-        cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
-        cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
-        cmakeAppendedArgs: '-DCMAKE_BUILD_TYPE=${{ matrix.build_type }}'
-        buildWithCMake: true
-        buildDirectory: '${{ env.build_dir }}'
-
-    # - name: Config
-    #   if: runner.os != 'Windows'
-    #   run: >-
-    #     cmake -B ${{ env.build_dir }}
-    #     -D CMAKE_BUILD_TYPE=${{ matrix.build_type }}
-    #     -D CMAKE_CXX_COMPILER_LAUNCHER=${{ matrix.ccache_variant }}
-
-    # - name: Config (Windows)
-    #   if: runner.os == 'Windows'
-    #   run: >-
-    #     cmake -B ${{ env.build_dir }}
-    #     -D CMAKE_CXX_COMPILER="${{ matrix.cxx_compiler }}"
-    #     -D CMAKE_BUILD_TYPE=${{ matrix.build_type }}
-    #     -D CMAKE_CXX_COMPILER_LAUNCHER=${{ matrix.ccache_variant }}
-
-    # - name: Build
-    #   run: cmake --build ${{ env.build_dir }} --config ${{ matrix.build_type }}
+      run: cmake --build ${{ env.build_dir }} --config ${{ matrix.build_type }}
 
     # - name: Clang-Tidy
     #   run: |
@@ -108,3 +88,23 @@ jobs:
     #     buildDir: 'build'
     #     installDir: 'install'
     #     cmakeArgs: '-DCMAKE_BUILD_TYPE=Release'
+
+    # - name: Build
+    #   if: runner.os != 'Windows'
+    #   uses: lukka/run-cmake@v3.4
+    #   with:
+    #     cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
+    #     cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
+    #     cmakeAppendedArgs: '-D CMAKE_BUILD_TYPE=${{ matrix.build_type }} -D CMAKE_CXX_COMPILER_LAUNCHER=${{ matrix.ccache_variant}}'
+    #     buildWithCMake: true
+    #     buildDirectory: '${{ env.build_dir }}'
+
+    # - name: Build (${{ runner.os }})
+    #   if: runner.os == 'Windows'
+    #   uses: lukka/run-cmake@v3.4
+    #   with:
+    #     cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
+    #     cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
+    #     cmakeAppendedArgs: '-D CMAKE_BUILD_TYPE=${{ matrix.build_type }}'
+    #     buildWithCMake: true
+    #     buildDirectory: '${{ env.build_dir }}'
