@@ -33,9 +33,9 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    # - name: Setup
-    #   if: runner.os == 'Windows'
-    #   run: mkdir ./.sccache
+    - name: Setup
+      if: runner.os == 'Windows'
+      run: mkdir ./.sccache
 
     - name: Ccache
       if: runner.os != 'Windows'
@@ -53,11 +53,9 @@ jobs:
 
     - name: Config (Windows)
       if: runner.os == 'Windows'
-      run: cmake -B ${{ env.build_dir }}
-        # cmake -B ${{ env.build_dir }}
-        # -D CMAKE_CXX_COMPILER="${{ matrix.cxx_compiler }}"
-        # -D CMAKE_BUILD_TYPE=${{ matrix.build_type }}
-        # -D CMAKE_CXX_COMPILER_LAUNCHER=${{ matrix.ccache_variant }}
+      run: >-
+        cmake -B ${{ env.build_dir }}
+        -D CMAKE_CXX_COMPILER_LAUNCHER=${{ matrix.ccache_variant }}
 
     - name: Build
       run: cmake --build ${{ env.build_dir }} --config ${{ matrix.build_type }}
