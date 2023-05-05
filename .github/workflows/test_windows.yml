@@ -48,7 +48,7 @@ jobs:
       with:
         #cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
         cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
-        configPreset: Release
+        configurePreset: Release
         buildPreset: Release
         #cmakeAppendedArgs: '-DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -D CMAKE_CXX_COMPILER_LAUNCHER=${{ matrix.ccache_variant}}'
         #buildWithCMake: true
