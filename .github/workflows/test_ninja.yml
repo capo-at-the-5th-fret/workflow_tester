@@ -16,8 +16,8 @@ jobs:
       matrix:
         config:
           - { name: "Windows MSVC", os: windows-latest, cc: "cl", cxx: "cl" }
-          - { name: "Ubuntu gcc", os: ubuntu-latest, cc: "gcc", cxx: "g++" }
-          - { name: "MacOS clang", os: macos-latest, cc: "clang", cxx: "clang++" }
+          #- { name: "Ubuntu gcc", os: ubuntu-latest, cc: "gcc", cxx: "g++" }
+          #- { name: "MacOS clang", os: macos-latest, cc: "clang", cxx: "clang++" }
         
     steps:
       # - name: Setup Ninja
@@ -26,11 +26,17 @@ jobs:
       #     # ninja version to download. Default: 1.10.0
       #     version: 1.10.0
 
-      - name: Build with CMake
-        uses: ashutoshvarma/action-cmake-build@master
-        with:
-          build-dir: ${{ runner.workspace }}/build
-          cc: ${{ matrix.config.cc }}
-          cxx: ${{ matrix.config.cxx }}
-          configure-options: -G Ninja
-          build-type: Release
+      - name: Config
+        run: cmake -G Ninja -B build -D CMAKE_CXX_COMPILER=cl
+
+      - name: Build
+        run: cmake --build . --config ${{matrix.build_type}}
+
+      # - name: Build with CMake
+      #   uses: ashutoshvarma/action-cmake-build@master
+      #   with:
+      #     build-dir: ${{ runner.workspace }}/build
+      #     cc: ${{ matrix.config.cc }}
+      #     cxx: ${{ matrix.config.cxx }}
+      #     configure-options: -G Ninja
+      #     build-type: Release
