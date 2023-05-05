@@ -13,7 +13,7 @@
 #   the dependencies are restored from GH Action cache.
 # - Finally builds the sources with Ninja.
 name: hosted-ninja-vcpkg-cacheoff
-on: [push, workflow_dispatch]
+on: [workflow_dispatch]
 
 jobs:
   job:
