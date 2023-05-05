@@ -23,7 +23,7 @@
 # - Finally, it runs CMake with CMakePreset.json and vcpkg's toolchain file to build 
 #   the C++ sources with Ninja.
 name: hosted-ninja-vcpkg-install-cacheoff
-on: [push, workflow_dispatch]
+on: [workflow_dispatch]
 
 jobs:
   job:
