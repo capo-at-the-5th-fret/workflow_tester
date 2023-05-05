@@ -20,11 +20,11 @@ jobs:
           - { name: "MacOS clang", os: macos-latest, cc: "clang", cxx: "clang++" }
         
     steps:
-      - name: Setup Ninja
-        uses: ashutoshvarma/setup-ninja@master
-        with:
-          # ninja version to download. Default: 1.10.0
-          version: 1.10.0
+      # - name: Setup Ninja
+      #   uses: ashutoshvarma/setup-ninja@master
+      #   with:
+      #     # ninja version to download. Default: 1.10.0
+      #     version: 1.10.0
 
       - name: Build with CMake
         uses: ashutoshvarma/action-cmake-build@master
