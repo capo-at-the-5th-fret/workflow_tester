@@ -44,13 +44,15 @@ jobs:
         variant: ${{ matrix.ccache_variant }}
 
     - name: CMake Build
-      uses: lukka/run-cmake@v3
+      uses: lukka/run-cmake@v10.4
       with:
-        cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
+        #cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
         cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
-        cmakeAppendedArgs: '-DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -D CMAKE_CXX_COMPILER_LAUNCHER=${{ matrix.ccache_variant}}'
-        buildWithCMake: true
-        buildDirectory: '${{ env.build_dir }}'
+        configPreset: Release
+        buildPreset: Release
+        #cmakeAppendedArgs: '-DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -D CMAKE_CXX_COMPILER_LAUNCHER=${{ matrix.ccache_variant}}'
+        #buildWithCMake: true
+        #buildDirectory: '${{ env.build_dir }}'
 
     # - name: Config
     #   if: runner.os != 'Windows'
