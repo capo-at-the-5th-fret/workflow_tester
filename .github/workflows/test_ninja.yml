@@ -29,7 +29,10 @@ jobs:
       #     version: 1.10.0
 
       - name: Config
-        run: cmake -G Ninja -B build -D CMAKE_CXX_COMPILER="C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Tools/MSVC/14.34.31933/bin/HostX64/x64/cl.exe"
+        run: >-
+          cmake -G Ninja -B build
+          -D CMAKE_CXX_COMPILER="C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Tools/MSVC/14.34.31933/bin/HostX64/x64/cl.exe"
+          -D CMAKE_RC_COMPILER="C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Tools/MSVC/14.34.31933/bin/HostX64/x64/cl.exe"
 
       - name: Build
         run: cmake --build . --config ${{matrix.build_type}}
