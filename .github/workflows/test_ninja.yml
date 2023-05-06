@@ -39,8 +39,8 @@ jobs:
       - name: Config
         run: >-
           cmake -G Ninja -B build
-          -D CMAKE_CXX_COMPILER="C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Tools/MSVC/14.34.31933/bin/HostX64/x64/cl.exe"
-          -D CMAKE_RC_COMPILER="C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Tools/MSVC/14.34.31933/bin/HostX64/x64/cl.exe"
+          -D CMAKE_CXX_COMPILER=cl
+          -D CMAKE_RC_COMPILER=cl
 
       - name: Build
         run: cmake --build . --config Release
