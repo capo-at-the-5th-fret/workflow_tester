@@ -26,6 +26,10 @@ jobs:
       - name: Install Ninja
         uses: seanmiddleditch/gha-setup-ninja@master
 
+      - name: Enable Developer Command Prompt (Windows)
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
+
       # - name: Setup Ninja
       #   uses: ashutoshvarma/setup-ninja@master
       #   with:
