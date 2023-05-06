@@ -30,17 +30,10 @@ jobs:
         if: runner.os == 'Windows'
         uses: ilammy/msvc-dev-cmd@v1
 
-      # - name: Setup Ninja
-      #   uses: ashutoshvarma/setup-ninja@master
-      #   with:
-      #     # ninja version to download. Default: 1.10.0
-      #     version: 1.10.0
-
       - name: Config
         run: >-
           cmake -G Ninja -B build
-          -D CMAKE_CXX_COMPILER=cl
-          -D CMAKE_RC_COMPILER=cl
+          -D CMAKE_CXX_COMPILER=${{ config.cxx }}
 
       - name: Build
         run: cmake --build . --config Release
