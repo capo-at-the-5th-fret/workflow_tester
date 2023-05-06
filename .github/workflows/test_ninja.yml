@@ -20,7 +20,11 @@ jobs:
           #- { name: "MacOS clang", os: macos-latest, cc: "clang", cxx: "clang++" }
     
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Ninja
+        uses: seanmiddleditch/gha-setup-ninja@master
 
       # - name: Setup Ninja
       #   uses: ashutoshvarma/setup-ninja@master
@@ -31,8 +35,8 @@ jobs:
       - name: Config
         run: >-
           cmake -G Ninja -B build
-          -D CMAKE_CXX_COMPILER=clang++
-          -D CMAKE_RC_COMPILER=clang++
+          -D CMAKE_CXX_COMPILER=cl
+          -D CMAKE_RC_COMPILER=cl
 
       - name: Build
         run: cmake --build . --config Release
