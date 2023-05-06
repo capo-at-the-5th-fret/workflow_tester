@@ -22,6 +22,8 @@ jobs:
           - { name: "MacOS clang", os: macos-latest, cc: "clang", cxx: "clang++", ccache_variant: ccache }
           #- { name: "MacOS gcc", os: macos-latest, cc: "gcc", cxx: "g++", ccache_variant: ccache }
 
+    name: ${{ matrix.config.name }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
