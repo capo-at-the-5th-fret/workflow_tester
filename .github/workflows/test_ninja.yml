@@ -24,8 +24,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install Ninja
-        uses: seanmiddleditch/gha-setup-ninja@master
+      - name: Install CMake and Ninja
+        uses: lukka/get-cmake@latest
+
+      # - name: Install Ninja
+      #   uses: seanmiddleditch/gha-setup-ninja@master
 
       - name: Enable Developer Command Prompt (Windows)
         if: runner.os == 'Windows'
