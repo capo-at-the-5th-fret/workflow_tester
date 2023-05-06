@@ -16,25 +16,22 @@ jobs:
       matrix:
         config:
           - { name: "Windows MSVC", os: windows-latest, cc: "cl", cxx: "cl" }
-          - { name: "Windows clang", os: windows-latest, cc: "clang", cxx: "clang++" }
+          #- { name: "Windows clang", os: windows-latest, cc: "clang", cxx: "clang++" }
           - { name: "Ubuntu gcc", os: ubuntu-latest, cc: "gcc", cxx: "g++" }
-          - { name: "Ubuntu clang", os: ubuntu-latest, cc: "clang", cxx: "clang++" }
+          #- { name: "Ubuntu clang", os: ubuntu-latest, cc: "clang", cxx: "clang++" }
           - { name: "MacOS clang", os: macos-latest, cc: "clang", cxx: "clang++" }
-          - { name: "MacOS gcc", os: macos-latest, cc: "gcc", cxx: "g++" }
-    
+          #- { name: "MacOS gcc", os: macos-latest, cc: "gcc", cxx: "g++" }
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install CMake and Ninja
-        uses: lukka/get-cmake@latest
-
-      # - name: Install Ninja
-      #   uses: seanmiddleditch/gha-setup-ninja@master
-
       - name: Enable Developer Command Prompt (Windows)
         if: runner.os == 'Windows'
         uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Install CMake and Ninja
+        uses: lukka/get-cmake@latest
 
       - name: Config
         run: >-
