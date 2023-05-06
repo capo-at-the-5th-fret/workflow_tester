@@ -33,7 +33,7 @@ jobs:
       - name: Config
         run: >-
           cmake -G Ninja -B build
-          -D CMAKE_CXX_COMPILER=${{ config.cxx }}
+          -D CMAKE_CXX_COMPILER=${{ matrix.config.cxx }}
 
       - name: Build
         run: cmake --build . --config Release
