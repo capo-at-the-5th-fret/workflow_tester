@@ -15,12 +15,12 @@ jobs:
     strategy:
       matrix:
         config:
-          - { name: "Windows MSVC", os: windows-latest, cc: "cl", cxx: "cl", ccache_variant: sccache }
-          #- { name: "Windows clang", os: windows-latest, cc: "clang", cxx: "clang++", ccache_variant: sccache }
-          - { name: "Ubuntu gcc", os: ubuntu-latest, cc: "gcc", cxx: "g++", ccache_variant: ccache }
-          #- { name: "Ubuntu clang", os: ubuntu-latest, cc: "clang", cxx: "clang++", ccache_variant: ccache }
-          - { name: "MacOS clang", os: macos-latest, cc: "clang", cxx: "clang++", ccache_variant: ccache }
-          #- { name: "MacOS gcc", os: macos-latest, cc: "gcc", cxx: "g++", ccache_variant: ccache }
+          - { name: "windows (msvc)", os: windows-latest, cc: "cl", cxx: "cl", ccache_variant: sccache }
+          #- { name: "windows (clang)", os: windows-latest, cc: "clang", cxx: "clang++", ccache_variant: sccache }
+          - { name: "ubuntu (gcc)", os: ubuntu-latest, cc: "gcc", cxx: "g++", ccache_variant: ccache }
+          #- { name: "ubuntu (clang)", os: ubuntu-latest, cc: "clang", cxx: "clang++", ccache_variant: ccache }
+          - { name: "macos (clang)", os: macos-latest, cc: "clang", cxx: "clang++", ccache_variant: ccache }
+          #- { name: "macos (gcc)", os: macos-latest, cc: "gcc", cxx: "g++", ccache_variant: ccache }
 
     name: ${{ matrix.config.name }}
 
