@@ -50,13 +50,13 @@ jobs:
       - name: Config
         if: ${{ !matrix.config.ccache_variant }}
         run: >-
-          cmake -G Ninja -B build
+          cmake -B build
           -D CMAKE_CXX_COMPILER=${{ matrix.config.cxx }}
       
       - name: Config (Ccache)
         if: matrix.config.ccache_variant
         run: >-
-          cmake -G Ninja -B build
+          cmake -B build
           -D CMAKE_CXX_COMPILER_LAUNCHER=${{ matrix.config.ccache_variant }}
           -D CMAKE_CXX_COMPILER=${{ matrix.config.cxx }}
 
