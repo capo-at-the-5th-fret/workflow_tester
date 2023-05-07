@@ -15,9 +15,9 @@ jobs:
     strategy:
       matrix:
         config:
-          - { name: "windows (msvc)", os: windows-latest, cc: "cl", cxx: "cl", ccache_variant: sccache }
+          #- { name: "windows (msvc)", os: windows-latest, cc: "cl", cxx: "cl", ccache_variant: sccache }
           #- { name: "windows (clang)", os: windows-latest, cc: "clang", cxx: "clang++", ccache_variant: sccache }
-          #- { name: "ubuntu (gcc)", os: ubuntu-latest, cc: "gcc", cxx: "g++-12", ccache_variant: ccache }
+          - { name: "ubuntu (gcc)", os: ubuntu-latest, cc: "gcc", cxx: "g++-12", ccache_variant: sccache }
           #- { name: "ubuntu (clang)", os: ubuntu-latest, cc: "clang", cxx: "clang++", ccache_variant: ccache }
           #- { name: "macos (clang)", os: macos-latest, cc: "clang", cxx: "$(brew --prefix llvm@15)/bin/clang++" } #, ccache_variant: ccache }
           #- { name: "macos (gcc)", os: macos-latest, cc: "gcc", cxx: "g++", ccache_variant: ccache }
