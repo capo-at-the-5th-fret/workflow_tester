@@ -27,7 +27,14 @@ include(doctest)
 add_executable(testrunner
 
     main.cpp
-    math_tests.cpp
+
+    test/test_type_list_tests.cpp
+
+    cmath_tests.cpp
+    concepts_tests.cpp
+    tuple_tests.cpp
+    type_list_tests.cpp
+    type_traits_tests.cpp
 )
 
 target_link_libraries(testrunner
