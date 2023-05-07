@@ -29,7 +29,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Ccache
-        if: ccache_variant
+        if: matrix.confix.ccache_variant
         uses: hendrikmuhs/ccache-action@v1.2
         with:
           key: ${{ github.job }}-${{ matrix.os }}-${{ matrix.build_type }}  # Eg. "some_build-ubuntu-latest"
@@ -43,13 +43,13 @@ jobs:
         uses: lukka/get-cmake@latest
 
       - name: Config
-        if: ${{ matrix.config.disable_ccache }}
+        if: ${{ !matrix.confix.ccache_variant }}
         run: >-
           cmake -G Ninja -B build
           -D CMAKE_CXX_COMPILER=${{ matrix.config.cxx }}
       
       - name: Config (Ccache)
-        if: ${{ !matrix.config.disable_ccache }}
+        if: matrix.confix.ccache_variant
         run: >-
           cmake -G Ninja -B build
           -D CMAKE_CXX_COMPILER_LAUNCHER=${{ matrix.config.ccache_variant }}
