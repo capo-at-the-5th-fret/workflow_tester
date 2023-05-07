@@ -32,7 +32,7 @@ jobs:
         if: matrix.config.ccache_variant
         uses: hendrikmuhs/ccache-action@v1.2
         with:
-          key: ${{ github.job }}-${{ matrix.os }}-${{ matrix.build_type }}  # Eg. "some_build-ubuntu-latest"
+          key: ${{ github.job }}-${{ matrix.os }} # Eg. "some_build-ubuntu-latest"
           variant: ${{ matrix.config.ccache_variant }}
 
       - name: Enable Developer Command Prompt (Windows)
