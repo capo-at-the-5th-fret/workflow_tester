@@ -22,14 +22,18 @@ jobs:
           - { name: "macos (gcc, sccache)", os: macos-latest, cc: "gcc", cxx: "g++", ccache_variant: sccache }
 
     name: ${{ matrix.config.name }}
+    # Reference:
+    # https://github.com/mozilla/sccache/blob/main/docs/GHA.md
     env:
         SCCACHE_GHA_ENABLED: "true"
+        CCACHE_DIR: ${{ github.workspace }}/cache/ccache
+        SCCACHE_DIR: ${{ github.workspace }}/cache/sccache
 
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Run sccache-cache
+      - name: sccache
         if: matrix.config.ccache_variant == 'sccache'
         uses: mozilla-actions/sccache-action@v0.0.3
 
