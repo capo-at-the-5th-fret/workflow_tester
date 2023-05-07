@@ -1,12 +1,6 @@
-name: Test sccache On Windows
+name: Test Caching
 
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
-  # push:
-  # pull_request:
-  #   branches: [ main ]
-
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 jobs:
@@ -19,7 +13,8 @@ jobs:
           #- { name: "windows (clang)", os: windows-latest, cc: "clang", cxx: "clang++", ccache_variant: sccache }
           - { name: "ubuntu (gcc,ccache)", os: ubuntu-latest, cc: "gcc", cxx: "g++-12", ccache_variant: ccache }
           - { name: "ubuntu (gcc,sccache)", os: ubuntu-latest, cc: "gcc", cxx: "g++-12", ccache_variant: sccache }
-          #- { name: "ubuntu (clang)", os: ubuntu-latest, cc: "clang", cxx: "clang++", ccache_variant: ccache }
+          - { name: "ubuntu (clang,ccache)", os: ubuntu-latest, cc: "clang", cxx: "clang++", ccache_variant: ccache }
+          - { name: "ubuntu (clang,sccache)", os: ubuntu-latest, cc: "clang", cxx: "clang++", ccache_variant: sccache }
           #- { name: "macos (clang)", os: macos-latest, cc: "clang", cxx: "$(brew --prefix llvm@15)/bin/clang++", ccache_variant: sccache }
           #- { name: "macos (gcc)", os: macos-latest, cc: "gcc", cxx: "g++", ccache_variant: sccache }
 
