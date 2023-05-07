@@ -15,9 +15,10 @@ jobs:
     strategy:
       matrix:
         config:
-          - { name: "windows (msvc)", os: windows-latest, cc: "cl", cxx: "cl", ccache_variant: sccache }
+          #- { name: "windows (msvc)", os: windows-latest, cc: "cl", cxx: "cl", ccache_variant: sccache }
           #- { name: "windows (clang)", os: windows-latest, cc: "clang", cxx: "clang++", ccache_variant: sccache }
-          #- { name: "ubuntu (gcc)", os: ubuntu-latest, cc: "gcc", cxx: "g++-12", ccache_variant: sccache }
+          - { name: "ubuntu (gcc)", os: ubuntu-latest, cc: "gcc", cxx: "g++-12", ccache_variant: ccache }
+          - { name: "ubuntu (gcc)", os: ubuntu-latest, cc: "gcc", cxx: "g++-12", ccache_variant: sccache }
           #- { name: "ubuntu (clang)", os: ubuntu-latest, cc: "clang", cxx: "clang++", ccache_variant: ccache }
           #- { name: "macos (clang)", os: macos-latest, cc: "clang", cxx: "$(brew --prefix llvm@15)/bin/clang++", ccache_variant: sccache }
           #- { name: "macos (gcc)", os: macos-latest, cc: "gcc", cxx: "g++", ccache_variant: sccache }
@@ -31,14 +32,15 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Run sccache-cache
+        if: matrix.config.ccache_variant == 'sccache'
         uses: mozilla-actions/sccache-action@v0.0.3
 
-      # - name: Ccache
-      #   if: matrix.config.ccache_variant
-      #   uses: hendrikmuhs/ccache-action@v1.2.8
-      #   with:
-      #     key: ${{ github.job }}-${{ matrix.os }} # Eg. "some_build-ubuntu-latest"
-      #     variant: ${{ matrix.config.ccache_variant }}
+      - name: Ccache
+        if: matrix.config.ccache_variant == 'ccache'
+        uses: hendrikmuhs/ccache-action@v1.2.8
+        with:
+          key: ${{ github.job }}-${{ matrix.os }} # Eg. "some_build-ubuntu-latest"
+          variant: ${{ matrix.config.ccache_variant }}
 
       - name: Enable Developer Command Prompt (Windows)
         if: runner.os == 'Windows'
@@ -53,7 +55,7 @@ jobs:
           cmake -B build
           -D CMAKE_CXX_COMPILER=${{ matrix.config.cxx }}
       
-      - name: Config (Ccache)
+      - name: Config (w/caching)
         if: matrix.config.ccache_variant
         run: >-
           cmake -B build
