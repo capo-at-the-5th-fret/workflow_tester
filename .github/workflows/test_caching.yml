@@ -11,7 +11,7 @@ jobs:
       matrix:
         config:
           - { name: "windows (msvc, ccache)", os: windows-latest, cc: "cl", cxx: "cl", ccache_variant: ccache }
-          - { name: "windows (msvc, ccache)", os: windows-latest, cc: "cl", cxx: "cl", ccache_variant: sccache }
+          - { name: "windows (msvc, sccache)", os: windows-latest, cc: "cl", cxx: "cl", ccache_variant: sccache }
           - { name: "windows (clang, ccache)", os: windows-latest, cc: "clang", cxx: "clang++", ccache_variant: ccache }
           - { name: "windows (clang, sccache)", os: windows-latest, cc: "clang", cxx: "clang++", ccache_variant: sccache }
           # - { name: "ubuntu (gcc, ccache)", os: ubuntu-latest, cc: "gcc", cxx: "g++-12", ccache_variant: ccache }
