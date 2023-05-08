@@ -49,7 +49,7 @@ jobs:
         if: matrix.config.ccache_variant == 'ccache'
         uses: hendrikmuhs/ccache-action@v1.2.8
         with:
-          key: ${{ github.job }}-${{ matrix.config.os }} # Eg. "some_build-ubuntu-latest"
+          key: ${{ github.job.name }}-${{ matrix.config.os }} # Eg. "some_build-ubuntu-latest"
           variant: ${{ matrix.config.ccache_variant }}
 
       # - name: Install CMake and Ninja
