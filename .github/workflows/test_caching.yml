@@ -5,6 +5,7 @@ on:
 
 jobs:
   build:
+    name: ${{ matrix.config.name }}
     runs-on: ${{ matrix.config.os }}
     strategy:
       matrix:
@@ -21,7 +22,6 @@ jobs:
           # - { name: "macos (gcc, ccache)", os: macos-latest, cc: "gcc", cxx: "g++", ccache_variant: ccache }
           # - { name: "macos (gcc, sccache)", os: macos-latest, cc: "gcc", cxx: "g++", ccache_variant: sccache }
 
-    name: ${{ matrix.config.name }}
     # Reference:
     # https://github.com/mozilla/sccache/blob/main/docs/GHA.md
     env:
@@ -33,6 +33,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Enable Developer Command Prompt (Windows)
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
+
       - name: Update Ccache (Windows)
         if: runner.os == 'Windows' && matrix.config.ccache_variant == 'ccache'
         run: choco upgrade ccache
@@ -40,10 +44,6 @@ jobs:
       - name: sccache
         if: matrix.config.ccache_variant == 'sccache'
         uses: mozilla-actions/sccache-action@v0.0.3
-
-      - name: Enable Developer Command Prompt (Windows)
-        if: runner.os == 'Windows'
-        uses: ilammy/msvc-dev-cmd@v1
 
       - name: Ccache
         if: matrix.config.ccache_variant == 'ccache'
@@ -77,6 +77,7 @@ jobs:
           -G Ninja
           -D CMAKE_CXX_COMPILER_LAUNCHER=${{ matrix.config.ccache_variant }}
           -D CMAKE_CXX_COMPILER=${{ matrix.config.cxx }}
+          -D CMAKE_BUILD_TYPE=Release
 
       - name: Build
-        run: cmake --build ./build --config Release
+        run: cmake --build ./build
