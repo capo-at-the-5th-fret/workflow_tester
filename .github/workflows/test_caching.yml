@@ -51,8 +51,8 @@ jobs:
       #   if: runner.os == 'Windows'
       #   uses: ilammy/msvc-dev-cmd@v1
 
-      - name: Install CMake and Ninja
-        uses: lukka/get-cmake@latest
+      # - name: Install CMake and Ninja
+      #   uses: lukka/get-cmake@latest
 
       - name: Config
         if: ${{ !matrix.config.ccache_variant }}
