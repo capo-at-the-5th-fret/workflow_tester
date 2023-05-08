@@ -47,6 +47,10 @@ jobs:
         if: runner.os == 'Windows' && matrix.config.ccache_variant == 'ccache'
         run: choco upgrade ccache
 
+      - name: Update gcc (Windows)
+        if: runner.os == 'Windows' && startsWith(${{ matrix.config.cxx }}, 'g++')
+        run: choco install mingw
+
       - name: sccache
         if: matrix.config.ccache_variant == 'sccache'
         uses: mozilla-actions/sccache-action@v0.0.3
