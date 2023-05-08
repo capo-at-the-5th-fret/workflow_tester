@@ -68,7 +68,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_BUILD_TYPE=Release -GNinja -DCMAKE_CXX_COMPILER_LAUNCHER=sccache ..
+          cmake -DCMAKE_CXX_COMPILER=${{ matrix.config.cxx }} -DCMAKE_BUILD_TYPE=Release -GNinja -DCMAKE_CXX_COMPILER_LAUNCHER=${{ matrix.config.ccache_variant }} ..
           ninja
 
       # - name: Config
