@@ -25,16 +25,13 @@ jobs:
     # Reference:
     # https://github.com/mozilla/sccache/blob/main/docs/GHA.md
     env:
-        #SCCACHE_GHA_ENABLED: true
+        SCCACHE_GHA_ENABLED: on
         CCACHE_DIR: ${{ github.workspace }}/cache/ccache
         SCCACHE_DIR: ${{ github.workspace }}/cache/sccache
 
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-
-      # - name: temp
-      #   run: echo ${{ env.SCCACHE_GHA_ENABLED }}
 
       - name: sccache
         if: matrix.config.ccache_variant == 'sccache'
