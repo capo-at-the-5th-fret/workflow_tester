@@ -39,7 +39,7 @@ jobs:
 
       - name: Update Ccache (Windows)
         if: runner.os == 'Windows' && matrix.config.ccache_variant == 'ccache'
-        run: choco upgrade ccache
+        run: choco upgrade ninja ccache
 
       - name: sccache
         if: matrix.config.ccache_variant == 'sccache'
