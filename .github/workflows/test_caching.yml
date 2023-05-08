@@ -26,19 +26,24 @@ jobs:
     # https://github.com/mozilla/sccache/blob/main/docs/GHA.md
     env:
         SCCACHE_GHA_ENABLED: "on"
-        CCACHE_DIR: ${{ github.workspace }}/cache/ccache
-        SCCACHE_DIR: ${{ github.workspace }}/cache/sccache
+        #CCACHE_DIR: ${{ github.workspace }}/cache/ccache
+        #SCCACHE_DIR: ${{ github.workspace }}/cache/sccache
 
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Fix
-        run: choco upgrade ccache ninja
+      - name: Update Ccache (Windows)
+        if: runner.os == 'Windows' && matrix.config.ccache_variant == 'ccache'
+        run: choco upgrade ccache
 
       - name: sccache
         if: matrix.config.ccache_variant == 'sccache'
         uses: mozilla-actions/sccache-action@v0.0.3
+
+      - name: Enable Developer Command Prompt (Windows)
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
 
       - name: Ccache
         if: matrix.config.ccache_variant == 'ccache'
@@ -47,23 +52,29 @@ jobs:
           key: ${{ github.job }}-${{ matrix.os }} # Eg. "some_build-ubuntu-latest"
           variant: ${{ matrix.config.ccache_variant }}
 
-      # - name: Enable Developer Command Prompt (Windows)
-      #   if: runner.os == 'Windows'
-      #   uses: ilammy/msvc-dev-cmd@v1
-
       # - name: Install CMake and Ninja
       #   uses: lukka/get-cmake@latest
+
+      # - name: print ccache and ninja
+      #   if: 
+      #   #shell: bash
+      #   run: |
+      #     sccache --version
+      #     echo "=============="
+      #     ninja --version
 
       - name: Config
         if: ${{ !matrix.config.ccache_variant }}
         run: >-
           cmake -B build
+          -G Ninja
           -D CMAKE_CXX_COMPILER=${{ matrix.config.cxx }}
       
       - name: Config (w/caching)
         if: matrix.config.ccache_variant
         run: >-
           cmake -B build
+          -G Ninja
           -D CMAKE_CXX_COMPILER_LAUNCHER=${{ matrix.config.ccache_variant }}
           -D CMAKE_CXX_COMPILER=${{ matrix.config.cxx }}
 
