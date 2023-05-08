@@ -17,8 +17,8 @@ jobs:
           # - { name: "windows (clang, ccache)", os: windows-latest, cc: "clang", cxx: "clang++", ccache_variant: ccache }
           # - { name: "windows (clang, sccache)", os: windows-latest, cc: "clang", cxx: "clang++", ccache_variant: sccache }
           - { name: "windows (gcc)", os: windows-latest, cc: "gcc", cxx: "g++" }
-          #- { name: "windows (gcc, ccache)", os: windows-latest, cc: "gcc", cxx: "g++", ccache_variant: ccache }
-          #- { name: "windows (gcc, sccache)", os: windows-latest, cc: "gcc", cxx: "g++", ccache_variant: sccache }
+          - { name: "windows (gcc, ccache)", os: windows-latest, cc: "gcc", cxx: "g++", ccache_variant: ccache }
+          - { name: "windows (gcc, sccache)", os: windows-latest, cc: "gcc", cxx: "g++", ccache_variant: sccache }
           # - { name: "ubuntu (gcc, ccache)", os: ubuntu-latest, cc: "gcc", cxx: "g++-12", ccache_variant: ccache }
           # - { name: "ubuntu (gcc, sccache)", os: ubuntu-latest, cc: "gcc", cxx: "g++-12", ccache_variant: sccache }
           # - { name: "ubuntu (clang, ccache)", os: ubuntu-latest, cc: "clang", cxx: "clang++", ccache_variant: ccache }
