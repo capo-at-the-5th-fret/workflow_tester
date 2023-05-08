@@ -55,13 +55,12 @@ jobs:
       # - name: Install CMake and Ninja
       #   uses: lukka/get-cmake@latest
 
-      # - name: print ccache and ninja
-      #   if: 
-      #   #shell: bash
-      #   run: |
-      #     sccache --version
-      #     echo "=============="
-      #     ninja --version
+      - name: print ccache and ninja
+        if: ${{ matrix.config.ccache_variant == 'ccache' }}
+        run: |
+          ccache --version
+          echo "=============="
+          ninja --version
 
       - name: Configure and Build
         shell: bash
