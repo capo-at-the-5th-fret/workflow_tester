@@ -47,9 +47,9 @@ jobs:
           key: ${{ github.job }}-${{ matrix.os }} # Eg. "some_build-ubuntu-latest"
           variant: ${{ matrix.config.ccache_variant }}
 
-      - name: Enable Developer Command Prompt (Windows)
-        if: runner.os == 'Windows'
-        uses: ilammy/msvc-dev-cmd@v1
+      # - name: Enable Developer Command Prompt (Windows)
+      #   if: runner.os == 'Windows'
+      #   uses: ilammy/msvc-dev-cmd@v1
 
       - name: Install CMake and Ninja
         uses: lukka/get-cmake@latest
