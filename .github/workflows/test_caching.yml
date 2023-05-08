@@ -49,7 +49,7 @@ jobs:
 
       - name: Update gcc (Windows)
         if: runner.os == 'Windows' && startsWith(${{ matrix.config.cxx }}, 'g++')
-        run: choco install mingw
+        run: choco upgrade mingw
 
       - name: sccache
         if: matrix.config.ccache_variant == 'sccache'
