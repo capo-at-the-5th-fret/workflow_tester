@@ -33,6 +33,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Fix
+        run: choco upgrade ccache ninja
+
       - name: sccache
         if: matrix.config.ccache_variant == 'sccache'
         uses: mozilla-actions/sccache-action@v0.0.3
