@@ -55,7 +55,7 @@ jobs:
       - name: Update gcc (Windows)
         shell: bash
         if: runner.os == 'Windows' && startsWith(matrix.config.cxx, 'g++')
-        run: choco upgrade mingw
+        run: choco upgrade cmake mingw
 
       # Very slow to update
       # - name: Update LLVM (Windows)
