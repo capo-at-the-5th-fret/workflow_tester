@@ -48,9 +48,9 @@ jobs:
         run: choco upgrade ccache
 
       # Very slow to update
-      # - name: Update gcc (Windows)
-      #   if: runner.os == 'Windows' && startsWith(matrix.config.cxx, 'g++')
-      #   run: choco upgrade mingw
+      - name: Update gcc (Windows)
+        if: runner.os == 'Windows' && startsWith(matrix.config.cxx, 'g++')
+        run: choco upgrade mingw
 
       # Very slow to update
       # - name: Update LLVM (Windows)
