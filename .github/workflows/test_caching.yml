@@ -93,18 +93,18 @@ jobs:
         if: ${{ !matrix.config.ccache_variant }}
         run: >-
           cmake -B build
-          -G Ninja
-          -D CMAKE_CXX_COMPILER=${{ matrix.config.cxx }}
-          -D CMAKE_BUILD_TYPE=Release
+          -GNinja
+          -DCMAKE_CXX_COMPILER=${{ matrix.config.cxx }}
+          -DCMAKE_BUILD_TYPE=Release
       
       - name: Config (w/caching)
         if: matrix.config.ccache_variant
         run: >-
           cmake -B build
-          -G Ninja
-          -D CMAKE_CXX_COMPILER_LAUNCHER=${{ matrix.config.ccache_variant }}
-          -D CMAKE_CXX_COMPILER=${{ matrix.config.cxx }}
-          -D CMAKE_BUILD_TYPE=Release
+          -GNinja
+          -DCMAKE_CXX_COMPILER_LAUNCHER=${{ matrix.config.ccache_variant }}
+          -DCMAKE_CXX_COMPILER=${{ matrix.config.cxx }}
+          -DCMAKE_BUILD_TYPE=Release
 
       - name: Build
         run: cmake --build ./build
