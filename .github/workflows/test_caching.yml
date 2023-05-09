@@ -53,6 +53,7 @@ jobs:
       # Very slow to update
       # Also fails to work when updating from 11 to 12
       - name: Update gcc (Windows)
+        shell: bash
         if: runner.os == 'Windows' && startsWith(matrix.config.cxx, 'g++')
         run: choco upgrade mingw
 
