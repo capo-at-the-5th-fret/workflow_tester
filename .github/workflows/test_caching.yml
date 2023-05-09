@@ -52,9 +52,9 @@ jobs:
 
       # Very slow to update
       # Also fails to work when updating from 11 to 12
-      # - name: Update gcc (Windows)
-      #   if: runner.os == 'Windows' && startsWith(matrix.config.cxx, 'g++')
-      #   run: choco upgrade mingw
+      - name: Update gcc (Windows)
+        if: runner.os == 'Windows' && startsWith(matrix.config.cxx, 'g++')
+        run: choco upgrade mingw
 
       # Very slow to update
       # - name: Update LLVM (Windows)
