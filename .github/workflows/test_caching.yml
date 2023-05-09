@@ -43,14 +43,17 @@ jobs:
         if: runner.os == 'Windows'
         uses: ilammy/msvc-dev-cmd@v1
 
+      # Needs to be updated on Windows or will not work
+      # See https://github.com/
       - name: Update Ccache (Windows)
         if: runner.os == 'Windows' && matrix.config.ccache_variant == 'ccache'
         run: choco upgrade ccache
 
       # Very slow to update
-      - name: Update gcc (Windows)
-        if: runner.os == 'Windows' && startsWith(matrix.config.cxx, 'g++')
-        run: choco upgrade mingw
+      # Also fails to work when updating from 11 to 12
+      # - name: Update gcc (Windows)
+      #   if: runner.os == 'Windows' && startsWith(matrix.config.cxx, 'g++')
+      #   run: choco upgrade mingw
 
       # Very slow to update
       # - name: Update LLVM (Windows)
@@ -71,37 +74,37 @@ jobs:
       # - name: Install CMake and Ninja
       #   uses: lukka/get-cmake@latest
 
-      - name: print ccache and ninja
-        if: ${{ matrix.config.ccache_variant == 'ccache' }}
-        run: |
-          ccache --version
-          echo "=============="
-          ninja --version
+      # - name: print ccache and ninja
+      #   if: ${{ matrix.config.ccache_variant == 'ccache' }}
+      #   run: |
+      #     ccache --version
+      #     echo "=============="
+      #     ninja --version
 
-      - name: Configure and Build
-        shell: bash
-        run: |
-          mkdir build
-          cd build
-          cmake -DCMAKE_CXX_COMPILER=${{ matrix.config.cxx }} -DCMAKE_BUILD_TYPE=Release -GNinja -DCMAKE_CXX_COMPILER_LAUNCHER=${{ matrix.config.ccache_variant }} ..
-          ninja
+      # - name: Configure and Build
+      #   shell: bash
+      #   run: |
+      #     mkdir build
+      #     cd build
+      #     cmake -DCMAKE_CXX_COMPILER=${{ matrix.config.cxx }} -DCMAKE_BUILD_TYPE=Release -GNinja -DCMAKE_CXX_COMPILER_LAUNCHER=${{ matrix.config.ccache_variant }} ..
+      #     ninja
 
-      # - name: Config
-      #   if: ${{ !matrix.config.ccache_variant }}
-      #   run: >-
-      #     cmake -B build
-      #     -G Ninja
-      #     -D CMAKE_CXX_COMPILER=${{ matrix.config.cxx }}
-      #     -D CMAKE_BUILD_TYPE=Release
+      - name: Config
+        if: ${{ !matrix.config.ccache_variant }}
+        run: >-
+          cmake -B build
+          -G Ninja
+          -D CMAKE_CXX_COMPILER=${{ matrix.config.cxx }}
+          -D CMAKE_BUILD_TYPE=Release
       
-      # - name: Config (w/caching)
-      #   if: matrix.config.ccache_variant
-      #   run: >-
-      #     cmake -B build
-      #     -G Ninja
-      #     -D CMAKE_CXX_COMPILER_LAUNCHER=${{ matrix.config.ccache_variant }}
-      #     -D CMAKE_CXX_COMPILER=${{ matrix.config.cxx }}
-      #     -D CMAKE_BUILD_TYPE=Release
+      - name: Config (w/caching)
+        if: matrix.config.ccache_variant
+        run: >-
+          cmake -B build
+          -G Ninja
+          -D CMAKE_CXX_COMPILER_LAUNCHER=${{ matrix.config.ccache_variant }}
+          -D CMAKE_CXX_COMPILER=${{ matrix.config.cxx }}
+          -D CMAKE_BUILD_TYPE=Release
 
-      # - name: Build
-      #   run: cmake --build ./build
+      - name: Build
+        run: cmake --build ./build
