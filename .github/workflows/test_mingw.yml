@@ -41,8 +41,8 @@ jobs:
           cmake -G Ninja -B build
           -D CMAKE_CXX_COMPILER=${{ matrix.config.cxx }}
 
-      # - name: Build
-      #   run: cmake --build ./build --config Release
+      - name: Build
+        run: cmake --build ./build --config Release
 
       # - name: Build with CMake
       #   uses: ashutoshvarma/action-cmake-build@master
