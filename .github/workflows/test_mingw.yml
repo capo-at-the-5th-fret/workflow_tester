@@ -29,22 +29,17 @@ jobs:
       # - name: Set up MinGW
       #   uses: egor-tensin/setup-mingw@v2
 
-      - name: Config
-        run: >-
-          cmake -G Ninja -B build
-          -D CMAKE_CXX_COMPILER=${{ matrix.config.cxx }}
-
       # - name: Enable Developer Command Prompt (Windows)
       #   if: runner.os == 'Windows'
       #   uses: ilammy/msvc-dev-cmd@v1
 
-      # - name: Install CMake and Ninja
-      #   uses: lukka/get-cmake@latest
+      - name: Install CMake and Ninja
+        uses: lukka/get-cmake@latest
 
-      # - name: Config
-      #   run: >-
-      #     cmake -G Ninja -B build
-      #     -D CMAKE_CXX_COMPILER=${{ matrix.config.cxx }}
+      - name: Config
+        run: >-
+          cmake -G Ninja -B build
+          -D CMAKE_CXX_COMPILER=${{ matrix.config.cxx }}
 
       # - name: Build
       #   run: cmake --build ./build --config Release
