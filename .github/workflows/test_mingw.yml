@@ -1,0 +1,59 @@
+name: Test MinGW
+
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  # push:
+  # pull_request:
+  #   branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      matrix:
+        config:
+          - { name: "Windows MinGW", os: windows-latest, cc: "gcc", cxx: "g++" }
+          #- { name: "Windows clang", os: windows-latest, cc: "clang", cxx: "clang++" }
+          #- { name: "Ubuntu gcc", os: ubuntu-latest, cc: "gcc", cxx: "g++" }
+          #- { name: "Ubuntu clang", os: ubuntu-latest, cc: "clang", cxx: "clang++" }
+          #- { name: "MacOS clang", os: macos-latest, cc: "clang", cxx: "clang++" }
+          #- { name: "MacOS gcc", os: macos-latest, cc: "gcc", cxx: "g++" }
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up MinGW
+        uses: egor-tensin/setup-mingw@v2
+
+      - name: Config
+        run: >-
+          cmake -G Ninja -B build
+          -D CMAKE_CXX_COMPILER=${{ matrix.config.cxx }}
+
+      # - name: Enable Developer Command Prompt (Windows)
+      #   if: runner.os == 'Windows'
+      #   uses: ilammy/msvc-dev-cmd@v1
+
+      # - name: Install CMake and Ninja
+      #   uses: lukka/get-cmake@latest
+
+      # - name: Config
+      #   run: >-
+      #     cmake -G Ninja -B build
+      #     -D CMAKE_CXX_COMPILER=${{ matrix.config.cxx }}
+
+      # - name: Build
+      #   run: cmake --build ./build --config Release
+
+      # - name: Build with CMake
+      #   uses: ashutoshvarma/action-cmake-build@master
+      #   with:
+      #     build-dir: ${{ runner.workspace }}/build
+      #     cc: ${{ matrix.config.cc }}
+      #     cxx: ${{ matrix.config.cxx }}
+      #     configure-options: -G Ninja
+      #     build-type: Release
