@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 env:
-  BUILD_TYPE: Release
+  BUILD_TYPE: Debug
 
 jobs:
   compute:
@@ -31,4 +31,4 @@ jobs:
       - name: Run matrix for ${{ matrix.comfig.os }}
         run: |
           echo "os: ${{ matrix.config.os }}"
-          echo "BUILD_TYPE: ${{ matrix.config.target_path }}"
+          echo "target_path: ${{ matrix.config.target_path }}"
