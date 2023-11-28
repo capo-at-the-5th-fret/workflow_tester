@@ -6,6 +6,8 @@ on:
 env:
   BUILD_TYPE: Debug
 
+# Reference:
+# https://stackoverflow.com/questions/74072206/github-actions-use-variables-in-matrix-definition
 jobs:
   compute:
     runs-on: ubuntu-latest
