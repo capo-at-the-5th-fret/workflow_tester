@@ -4,41 +4,31 @@ on:
   workflow_dispatch:
 
 env:
-  CARGO_TERM_COLOR: always
-  ZEROCOPY_MSRV: 1.61.0
-  ZEROCOPY_CURRENT_STABLE: 1.64.0
-  ZEROCOPY_CURRENT_NIGHTLY: nightly-2022-09-26
+  BUILD_TYPE: Release
 
 jobs:
   compute:
     runs-on: ubuntu-latest
     outputs:
-      ZEROCOPY_MSRV: ${{ env.ZEROCOPY_MSRV }}
-      ZEROCOPY_CURRENT_STABLE: ${{ env.ZEROCOPY_CURRENT_STABLE }}
-      ZEROCOPY_CURRENT_NIGHTLY: ${{ env.ZEROCOPY_CURRENT_NIGHTLY }}
+      BUILD_TYPE: ${{ env.BUILD_TYPE }}
+
     steps:
       - name: Compute outputs
         run: |
-          echo "ZEROCOPY_MSRV=${{ env.ZEROCOPY_MSRV }}" >> $GITHUB_OUTPUT
-          echo "ZEROCOPY_CURRENT_STABLE=${{ env.ZEROCOPY_CURRENT_STABLE }}" >> $GITHUB_OUTPUT
-          echo "ZEROCOPY_CURRENT_NIGHTLY=${{ env.ZEROCOPY_CURRENT_NIGHTLY }}" >> $GITHUB_OUTPUT
+          echo "BUILD_TYPE=${{ env.BUILD_TYPE }}" >> $GITHUB_OUTPUT
 
-  build_test:
-    runs-on: ubuntu-latest
-    needs: compute
+  build:
     strategy:
+      fail-fast: false
       matrix:
-        channel: ["${{ needs.compute.outputs.ZEROCOPY_MSRV }}", "${{ needs.compute.outputs.ZEROCOPY_CURRENT_STABLE }}", "${{ needs.compute.outputs.ZEROCOPY_CURRENT_NIGHTLY }}"]
-        target: ["i686-unknown-linux-gnu", "x86_64-unknown-linux-gnu", "arm-unknown-linux-gnueabi", "aarch64-unknown-linux-gnu", "powerpc-unknown-linux-gnu", "powerpc64-unknown-linux-gnu", "wasm32-wasi"]
-        features: ["" , "alloc,simd", "alloc,simd,simd-nightly"]
-        exclude:
-          - channel: ${{ needs.compute.outputs.ZEROCOPY_MSRV }}
-            features: "alloc,simd,simd-nightly"
-          - channel: ${{ needs.compute.outputs.ZEROCOPY_CURRENT_STABLE }}
-            features: "alloc,simd,simd-nightly"
+        config:
+          - { name: "windows (msvc)", os: windows-latest, cc: "cl", cxx: "cl", target_path: "./${{ needs.compute.outputs.BUILD_TYPE }}/benchmark_runner", ccache_variant: ccache }
+
+    runs-on: ${{ matrix.config.os }}
+    needs: compute
+    
     steps:
-      - name: Run matrix for ${{ matrix.channel }}-${{ matrix.target }}-${{ matrix.features }}"
+      - name: Run matrix for ${{ matrix.comfig.os }}
         run: |
-          echo "Channel: ${{ matrix.channel }}"
-          echo "Target: ${{ matrix.target }}"
-          echo "Features: ${{ matrix.features }}"
+          echo "os: ${{ matrix.config.os }}"
+          echo "BUILD_TYPE: ${{ matrix.config.target_path }}"
