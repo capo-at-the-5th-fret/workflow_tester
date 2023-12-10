@@ -1,0 +1,43 @@
+name: macos_brew_clang
+
+on:
+  workflow_dispatch:
+
+env:
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      matrix:
+        config:
+          #- { name: "msvc", os: windows-latest, cxx: "cl" }
+          #- { name: "clang (windows)", os: windows-latest, cxx: "clang++" }
+          #- { name: "gcc", os: ubuntu-latest, cxx: "g++" }
+          #- { name: "clang (ubuntu)", os: ubuntu-latest, cxx: "clang++" }
+          - { name: "clang (macos)", os: macos-latest, cxx: "$(brew --prefix llvm@17)/bin/clang++" }
+          #- { name: "gcc (macos)", os: macos-latest, cxx: "g++" }
+
+    name: ${{ matrix.config.name }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install CMake And Ninja
+        uses: lukka/get-cmake@latest
+        with:
+          cmakeVersion: "~3.28.0"
+
+      - name: Install clang
+        if: runner.os == 'MacOS'
+        run: brew install llvm@17
+
+      - name: Config
+        run: >-
+          cmake -G Ninja -B build
+          -D CMAKE_CXX_COMPILER=${{ matrix.config.cxx }}
+
+      - name: Build
+        run: cmake --build ./build --config Release
