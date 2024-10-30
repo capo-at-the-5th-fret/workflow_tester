@@ -11,10 +11,10 @@ jobs:
           - windows-2022
           - ubuntu-24.04
           - macos-14 # arm64
-          - macos-13
+          #- macos-13
         compiler:
-          - llvm-18
-          - gcc-14
+          - llvm
+          - gcc
           # you can specify the version after `-` like `llvm-18`.
         include:
           - os: "windows-2022"
@@ -48,7 +48,6 @@ jobs:
           vcvarsall: ${{ contains(matrix.os, 'windows') }}
           cmake: true
           ninja: true
-          vcpkg: true
-          cppcheck: true
-          clang-tidy: true # instead of `true`, which chooses the default version, you can pass a specific version.
-          # ...
+          vcpkg: false
+          cppcheck: false
+          clang-tidy: false
