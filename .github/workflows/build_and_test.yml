@@ -1,0 +1,36 @@
+name: Build & Tests
+
+on:
+  workflow_dispatch:
+
+env:
+  BUILD_TYPE: Debug
+
+# Reference:
+# https://stackoverflow.com/questions/74072206/github-actions-use-variables-in-matrix-definition
+jobs:
+  compute:
+    runs-on: ubuntu-latest
+    outputs:
+      BUILD_TYPE: ${{ env.BUILD_TYPE }}
+
+    steps:
+      - name: Compute outputs
+        run: |
+          echo "BUILD_TYPE=${{ env.BUILD_TYPE }}" >> $GITHUB_OUTPUT
+
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - { name: "windows (msvc)", os: windows-latest, cc: "cl", cxx: "cl", target_path: "./${{ needs.compute.outputs.BUILD_TYPE }}/benchmark_runner", ccache_variant: ccache }
+
+    runs-on: ${{ matrix.config.os }}
+    needs: compute
+    
+    steps:
+      - name: Run matrix for ${{ matrix.comfig.os }}
+        run: |
+          echo "os: ${{ matrix.config.os }}"
+          echo "target_path: ${{ matrix.config.target_path }}"
